@@ -201,6 +201,7 @@
                 "chmod +x ./setupControllerInstance.sh\n",
                 "./setupControllerInstance.sh\n",
                 "mkdir /home/ec2-user/variables\n",
+                "chown ec2-user:ec2-user /home/ec2-user/variables\n",
                 { "Fn::Sub" : [ "echo ${vpcid} > /home/ec2-user/variables/vpcid\n", { "vpcid": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.VPCID" ] } } ] },
                 { "Fn::Sub" : [ "echo ${dsmSubnet} > /home/ec2-user/variables/dsmSubnet\n", { "dsmSubnet": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PublicSubnet1" ] } } ] },
                 { "Fn::Sub" : [ "echo ${dbSubnet1} > /home/ec2-user/variables/dbSubnet1\n", { "dbSubnet1": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PrivateSubnet1" ] } } ] },
