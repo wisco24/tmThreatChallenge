@@ -197,7 +197,7 @@
               [
                 "#!/bin/bash -xe\n",
                 "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh -o /home/ec2-user/setupControllerInstance.sh\n",
-                "cd /home/ec2-user/\n"
+                "cd /home/ec2-user/\n",
                 "chmod +x ./setupControllerInstance.sh\n",
                 "./setupControllerInstance.sh\n",
                 "mkdir /home/ec2-user/variables\n",
