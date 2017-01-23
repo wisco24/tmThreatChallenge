@@ -9,7 +9,7 @@ rpm -ihv /tmp/agent.rpm
 sudo yum -y install git
 sudo yum -y install jq
 sudo yum -y install perl-XML-Twig
-sudo yum install libunwind libicu
+sudo yum -y install libunwind libicu
 
 cd /home/ec2-user/
 git clone https://github.com/424D57/tmThreatChallenge.git
