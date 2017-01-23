@@ -14,6 +14,12 @@ sudo yum -y install libunwind libicu
 cd /home/ec2-user/
 git clone https://github.com/424D57/tmThreatChallenge.git
 chown -R ec2-user:ec2-user tmThreatChallenge
+mkdir .aws
+touch .aws/config
+chown -R ec2-user:ec2-user .aws
+echo "[default]" > .aws/config
+region=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
+echo "region = ${region}" >> .aws/config
 ##todo: aws create-key-pair threatChallengeKeyPair for DSM and team instances
 ##todo: setup bashrc
 
