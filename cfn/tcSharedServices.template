@@ -222,7 +222,7 @@
       "Properties" : {
         "IamInstanceProfile" : { "Ref": "ControllerInstanceProfile" },
         "ImageId" : "ami-2d57433a",
-        "InstanceType" : "m4.large",
+        "InstanceType" : "m3.large",
         "Tags"               : [
           {
             "Key" : "Name",
