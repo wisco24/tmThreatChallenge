@@ -2,9 +2,6 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "",
   "Parameters" : {
-    "TeamName" : {
-      "Type" : "String"
-    },
     "BaseUrl" : {
       "Type" : "String",
       "Default" : "https://s3.amazonaws.com/trendctf/cfn/"
@@ -42,10 +39,6 @@
     },
     "PasswordBucket" : {
       "Description" : "Name of S3 bucket contining Passwords.csv",
-      "Type" : "String"
-    },
-    "T0AdminPassword" : {
-      "Description" : "Password for DSM Tenant 0",
       "Type" : "String"
     }
   },
@@ -203,7 +196,7 @@
               "",
               [
                 "#!/bin/bash -xe\n",
-                "curl -o https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh /home/ec2-user/setupControllerInstance.sh\n",
+                "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh -o /home/ec2-user/setupControllerInstance.sh\n",
                 "cd /home/ec2-user/; ./setupControllerInstance.sh\n",
                 "mkdir /home/ec2-user/variables\n",
                 { "Fn::Sub" : [ "echo ${vpcid} > /home/ec2-user/variables/vpcid\n", { "vpcid": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.VPCID" ] } } ] },
@@ -214,7 +207,7 @@
                 { "Fn::Sub" : [ "echo ${featureAC} > /home/ec2-user/variables/featureAC\n", { "featureAC": { "Ref": "FeatureAC" } } ] },
                 { "Fn::Sub" : [ "echo ${multiTenantAC} > /home/ec2-user/variables/multiTenantAC\n", { "multiTenantAC": { "Ref": "MultiTenantAC" } } ] },
                 { "Fn::Sub" : [ "echo ${eventName} > /home/ec2-user/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
-                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "T0AdminPassword" } } ] }
+                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "DsmT0Password" } } ] }
               ]
             ]
           }
@@ -230,7 +223,7 @@
         "Tags"               : [
           {
             "Key" : "Name",
-            "Value" : "Threat Challenges Controller"
+            "Value" : "Threat Challenges Ctf Server"
           },
           {
             "Key" : "Role",
@@ -256,7 +249,7 @@
               "",
               [
                 "#!/bin/bash -xe\n",
-                "curl -o https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh /home/ubuntu/setupCtfInstance.sh\n",
+                "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh -o /home/ubuntu/setupCtfInstance.sh\n",
                 "cd /home/ubuntu/; ./setupCtfInstance.sh\n"
               ]
             ]
