@@ -1,0 +1,269 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Parameters" : {
+    "TeamName" : {
+      "Type" : "String"
+    },
+    "BaseUrl" : {
+      "Type" : "String",
+      "Default" : "https://s3.amazonaws.com/trendctf/cfn/"
+    },
+    "AWSIKeyPairName" : {
+      "Type" : "AWS::EC2::KeyPair::KeyName"
+    },
+    "baseDomain" : {
+      "Type" : "String"
+    },
+    "EventName" : {
+      "Description" : "Name of the challenge event (ex NYC2017). Will be used in domain name. max 10 char",
+      "Type" : "String"
+      "AllowedPattern" : "[a-zA-Z0-9]*",
+      "MinLength" : 2,
+      "MaxLength" : 10
+    },
+    "DsmT0Password" : {
+      "Description" : "Password for DSM Tenant 0. Username is t0Admin",
+      "Type" : "String"
+    },
+    "FeatureAC" : {
+      "Description" : "Activation Code for all modules",
+      "Type" : "String",
+      "MinLength"   : 37,
+      "MaxLength"   : 37,
+      "AllowedPattern" : "[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}"
+    },
+    "MultiTenantAC" : {
+      "Description" : "Activation Code for MT",
+      "Type" : "String",
+      "MinLength"   : 37,
+      "MaxLength"   : 37,
+      "AllowedPattern" : "[A-Z0-9]{2}-[A-Z0-9]{4}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}"
+    },
+    "PasswordBucket" : {
+      "Description" : "Name of S3 bucket contining Passwords.csv",
+      "Type" : "String"
+    },
+    "T0AdminPassword" : {
+      "Description" : "Password for DSM Tenant 0",
+      "Type" : "String"
+    }
+  },
+  "Mappings" : {
+    "Parameters" : {
+      "CfnUrlPrefix" : {
+        "Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/"
+      }
+    }
+  },
+  "Resources": {
+    "InfrastructureStack" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "BaseUrl"
+              },
+              "teamInfrastructure.template"
+            ]
+          ]
+        }
+      }
+    },
+    "ControllerRole"         : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument" : {
+          "Statement" : [
+            {
+              "Effect" : "Allow",
+              "Principal" : {
+                "Service" : [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action"    : [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path"                     : "/",
+        "ManagedPolicyArns" : [
+          "arn:aws:iam::aws:policy/AdministratorAccess"
+        ]
+      }
+    },
+    "ControllerInstanceProfile"      : {
+      "Type" : "AWS::IAM::InstanceProfile",
+      "Properties" : {
+        "Path" : "/",
+        "Roles" : [
+          {
+            "Ref" : "ControllerRole"
+          }
+        ]
+      }
+    },
+    "ControllerSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow 443 Inbound to ATK instance. Also for use as SSG to other instances",
+        "VpcId" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.VPCID" ]},
+        "SecurityGroupIngress" : [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "ControllerSecurityGroups"
+          }
+        ]
+      }
+    },
+    "CtfSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow 443 Inbound to ATK instance. Also for use as SSG to other instances",
+        "VpcId" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.VPCID" ]},
+        "SecurityGroupIngress" : [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          ,
+          {
+            "IpProtocol": "tcp",
+            "FromPort" : "22",
+            "ToPort" : "22",
+            "SourceSecurityGroupId" : { "Ref": "ControllerSecurityGroup" }
+          }
+        ],
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "CtfSecurityGroup"
+          }
+        ]
+      }
+    },
+    "ControllerInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : { "Ref": "ControllerInstanceProfile" },
+        "ImageId" : "ami-9be6f38c",
+        "InstanceType" : "m4.large",
+        "Tags"               : [
+          {
+            "Key" : "Name",
+            "Value" : "Threat Challenges Controller"
+          },
+          {
+            "Key" : "Role",
+            "Value" : "StudentAttack"
+          }
+        ],
+        "KeyName" : { "Ref" : "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet1" ]},
+            "AssociatePublicIpAddress" : "true",
+            "GroupSet"                 : [
+              {
+                "Ref" : "ControllerSecurityGroup"
+              }
+            ]
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64" : {
+            "Fn::Join" : [
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                { "Fn::Sub" : [ "curl -o https://${BaseUrl}/scripts/orchestration/setupControllerInstance.sh /home/ec2-user/setupControllerInstance.sh\n", { "BaseUrl": { "Ref": "BaseUrl" } } ] },
+                "cd /home/ec2-user/; ./setupControllerInstance.sh\n",
+                "mkdir /home/ec2-user/variables\n",
+                { "Fn::Sub" : [ "echo ${vpcid} > /home/ec2-user/variables/vpcid\n", { "vpcid": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.VPCID" ] } } ] },
+                { "Fn::Sub" : [ "echo ${dsmSubnet} > /home/ec2-user/variables/dsmSubnet\n", { "dsmSubnet": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PublicSubnet1" ] } } ] },
+                { "Fn::Sub" : [ "echo ${dbSubnet1} > /home/ec2-user/variables/dbSubnet1\n", { "dbSubnet1": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PrivateSubnet1" ] } } ] },
+                { "Fn::Sub" : [ "echo ${dbSubnet2} > /home/ec2-user/variables/dbSubnet2\n", { "dbSubnet2": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PrivateSubnet2" ] } } ] },
+                { "Fn::Sub" : [ "echo ${bucket} > /home/ec2-user/variables/bucket\n", { "bucket": { "Ref": "PasswordBucket" } } ] },
+                { "Fn::Sub" : [ "echo ${featureAC} > /home/ec2-user/variables/featureAC\n", { "featureAC": { "Ref": "FeatureAC" } } ] },
+                { "Fn::Sub" : [ "echo ${multiTenantAC} > /home/ec2-user/variables/multiTenantAC\n", { "multiTenantAC": { "Ref": "MultiTenantAC" } } ] },
+                { "Fn::Sub" : [ "echo ${eventName} > /home/ec2-user/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
+                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "eventName": { "Ref": "T0AdminPassword" } } ] }
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "CtfInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : { "Ref": "ControllerInstanceProfile" },
+        "ImageId" : "ami-9be6f38c",
+        "InstanceType" : "m4.large",
+        "Tags"               : [
+          {
+            "Key" : "Name",
+            "Value" : "Threat Challenges Controller"
+          },
+          {
+            "Key" : "Role",
+            "Value" : "SharedServices"
+          }
+        ],
+        "KeyName" : { "Ref" : "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet1" ]},
+            "AssociatePublicIpAddress" : "true",
+            "GroupSet"                 : [
+              {
+                "Ref" : "CtfSecurityGroup"
+              }
+            ]
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64" : {
+            "Fn::Join" : [
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                { "Fn::Sub" : [ "curl -o https://${BaseUrl}/scripts/orchestration/setupCtfInstance.sh /home/ubuntu/setupCtfInstance.sh\n", { "BaseUrl": { "Ref": "BaseUrl" } } ] },
+                "cd /home/ubuntu/; ./setupCtfInstance.sh\n"
+              ]
+            ]
+          }
+        }
+      }
+    }
+  }
+}

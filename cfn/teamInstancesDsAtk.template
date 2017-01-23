@@ -1,0 +1,337 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "Template for creating Team Day 2 Instances",
+  "Parameters" : {
+    "AWSIKeyPairName" : {
+      "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
+      "Type"        : "AWS::EC2::KeyPair::KeyName",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "ConstraintDescription" : "Select an existing EC2 Key Pair."
+    },
+    "AWSIVPC"         : {
+      "Description" : "VPC for this team",
+      "Type"        : "AWS::EC2::VPC::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*"
+    },
+    "PublicSubnetID"     : {
+      "Description" : "Public Subnet for ATK instance",
+      "Type"        : "AWS::EC2::Subnet::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*",
+      "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+    },
+    "PrivateSubnetID"     : {
+      "Description" : "Private Subnet for VTM instance",
+      "Type"        : "AWS::EC2::Subnet::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*",
+      "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+    },
+    "TeamName" :{
+      "Description" : "Name of CTF Team",
+      "Type" : "String"
+    },
+    "Build" : {
+      "Description" : "DSM in build",
+      "Type" : "String",
+      "Default" : "ST",
+      "AllowedValues" : [
+        "MT",
+        "ST"
+      ]
+    },
+    "DSTenantId" : {
+      "Description" : "Team Deep Security Manager Tenant ID",
+      "Type" : "String",
+      "Default" : ""
+    },
+    "DSTenantPassword" : {
+      "Description" : "Team Deep Security Manager Tenant Password",
+      "Type" : "String",
+      "Default" : ""
+    },
+    "TeamPassword" : {
+      "Type" : "String"
+    },
+    "MtDsmFqdn" : {
+      "Type" : "String",
+      "Default" : "dsm.trenddemos.com"
+    }
+  },
+  "Resources" :{
+    "DsAtkJmpSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow 443 Inbound to ATK instance. Also for use as SSG to other instances",
+        "VpcId" : { "Ref" : "AWSIVPC" },
+        "SecurityGroupIngress" : [
+          {
+            "IpProtocol" : "tcp",
+            "FromPort"   : "443",
+            "ToPort"     : "443",
+            "CidrIp"     : "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "DsAtkAtkSecurityGroup"
+          }
+        ]
+      }
+    },
+    "DsAtkVtmSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow all Inbound to VTM from ATK instance",
+        "VpcId" : { "Ref" : "AWSIVPC" },
+        "SecurityGroupIngress" : [
+          {
+            "IpProtocol" : "-1",
+            "FromPort"   : "1",
+            "ToPort"     : "65535",
+            "SourceSecurityGroupId"     : { "Ref" : "DsAtkMsfSecurityGroup" }
+          }
+        ],
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "DsAtkVtmSecurityGroup"
+          }
+        ]
+      }
+    },
+    "DsAtkMsfSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow all Inbound to VTM from ATK instance",
+        "VpcId" : { "Ref" : "AWSIVPC" },
+        "SecurityGroupIngress" : [
+          {
+            "IpProtocol" : "tcp",
+            "FromPort"   : "22",
+            "ToPort"     : "22",
+            "SourceSecurityGroupId"     : { "Ref" : "DsAtkJmpSecurityGroup" }
+          }
+        ],
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "DsAtkMsfSecurityGroup"
+          }
+        ]
+      }
+    },
+    "DsAtkJmpInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : "RunCommand",
+        "ImageId" : "ami-15ec0b03",
+        "InstanceType" : "t2.medium",
+        "Tags"               : [
+          {
+            "Key" : "Name",
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                  [
+                    { "Ref" : "TeamName"},
+                    " DsAtk JMP"
+                  ]
+              ]
+            }
+          },
+          {
+            "Key" : "Role",
+            "Value" : "StudentAttack"
+          }
+        ],
+        "KeyName" : { "Ref" : "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : {
+              "Ref" : "PublicSubnetID"
+            },
+            "AssociatePublicIpAddress" : "true",
+            "GroupSet"                 : [
+              {
+                "Ref" : "DsAtkJmpSecurityGroup"
+              }
+            ],
+            "PrivateIpAddress" : "192.168.0.11"
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64" : {
+            "Fn::Join" : [
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                "/opt/ds_agent/dsa_control -r\n",
+                { "Fn::Sub" : [ "/home/ubuntu/password.sh ${user} ${password}\n", { "user" : { "Ref": "TeamName" }, "password" : { "Ref": "TeamPassword" }} ]},
+                { "Fn::Sub" : [ "echo ${teamname} >> /var/www/html/teamname.txt\n", { "teamname" : { "Ref" : "TeamName" } } ] },
+                {
+                  "Fn::If" : [
+                    "SingleTenant",
+                    "/opt/ds_agent/dsa_control -a dsm://app.deepsecurity.trendmicro.com:4120/ \"policyname:Linux Server\" \"tenantID:93CAF3DB-CEFD-5101-C225-45C54015F93E\" \"tenantPassword:54847C6D-3238-7DBB-35A9-EB92AFC9505B\"",
+                    { "Fn::Sub" : [ "/opt/ds_agent/dsa_control -a dsm://${MtDsmFqdn}:4120/ \"policyname:Linux Server\"", { "MtDsmFqdn": { "Ref": "MtDsmFqdn" } } ] }
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "DsAtkJumpRoute53Entries" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "Comment" : "trenddemos.com entries for hybridcloudworkshop day1",
+        "HostedZoneId" : "Z54BUX0B2EC7C",
+        "Name" : {
+          "Fn::Join" : [
+            "",
+            [
+              { "Ref" : "TeamName" },
+              ".jump.trenddemos.com."
+            ]
+          ]
+        },
+        "Type" : "A",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "DsAtkJmpInstance", "PublicIp" ] } ]
+      }
+    },
+    "DsAtkVtmInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : "RunCommand",
+        "ImageId" : "ami-abb4efbc",
+        "InstanceType" : "t2.small",
+        "Tags"               : [
+          {
+            "Key" : "Name",
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "TeamName"},
+                  " DS-VTM Day 1"
+                ]
+              ]
+            }
+          }
+        ],
+        "KeyName" : { "Ref" : "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : {
+              "Ref" : "PrivateSubnetID"
+            },
+            "AssociatePublicIpAddress" : "false",
+            "GroupSet"                 : [
+              {
+                "Ref" : "DsAtkVtmSecurityGroup"
+              }
+            ],
+            "PrivateIpAddress" : "192.168.1.11"
+          }
+        ]
+      }
+    },
+    "DsAtkMsfInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : "RunCommand",
+        "ImageId" : "ami-11edb406",
+        "InstanceType" : "t2.medium",
+        "Tags"               : [
+          {
+            "Key" : "Name",
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "TeamName"},
+                  " Msf"
+                ]
+              ]
+            }
+          }
+        ],
+        "KeyName" : { "Ref" : "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : {
+              "Ref" : "PrivateSubnetID"
+            },
+            "AssociatePublicIpAddress" : "false",
+            "GroupSet"                 : [
+              {
+                "Ref" : "DsAtkMsfSecurityGroup"
+              }
+            ],
+            "PrivateIpAddress" : "192.168.1.21"
+          }
+        ]
+      }
+    }
+  },
+  "Conditions" : {
+    "SingleTenant" : {
+      "Fn::Equals" : [
+        { "Ref": "Build" },
+        "ST"
+      ]
+    }
+  },
+  "Outputs" : {
+    "JmpInstanceId" : {"Value" : {"Ref" : "DsAtkJmpInstance"}},
+    "VtmInstanceId" : {"Value" : {"Ref" : "DsAtkVtmInstance"}},
+    "JmpSecurityGroups" : { "Value" : { "Ref" : "DsAtkJmpSecurityGroup" }}
+  }
+}

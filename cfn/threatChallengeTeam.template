@@ -1,0 +1,283 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Parameters" : {
+    "TeamName" : {
+      "Type" : "String"
+    },
+    "BaseUrl" : {
+      "Type" : "String",
+      "Default" : "https://s3.amazonaws.com/trendctf/cfn/"
+    },
+    "AWSIKeyPairName" : {
+      "Type" : "AWS::EC2::KeyPair::KeyName",
+      "Default" : "threatChallengeKeyPair"
+    },
+    "DeepSecurityAdminName"         : {
+      "Default" : "MasterAdmin",
+      "NoEcho"  : false,
+      "Description" : "The Deep Security Manager administrator username for Web Console Access.",
+      "Type"        : "String",
+      "MinLength"   : 1,
+      "MaxLength"   : 16,
+      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+      "ConstraintDescription" : "Must begin with a letter and contain only alphanumeric characters. Min length 1, max length 16"
+    },
+    "DeepSecurityAdminPass"     : {
+      "Default" : "TrendMicro01-",
+      "NoEcho" : true,
+      "Description" : "The Deep Security Manager administrator password. Must be 8-41 characters long and can only contain alphanumeric characters or the following special characters !^*-_+",
+      "Type"        : "String",
+      "MinLength"   : 8,
+      "MaxLength"   : 41,
+      "AllowedPattern" : "[a-zA-Z0-9!^*\\-_+]*",
+      "ConstraintDescription" : "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
+    },
+    "Build" : {
+      "Description" : "DSM in build",
+      "Type" : "String",
+      "Default" : "ST",
+      "AllowedValues" : [
+        "MT",
+        "ST"
+      ]
+    },
+    "DSTenantId" : {
+      "Description" : "Team Deep Security Manager Tenant ID",
+      "Type" : "String",
+      "Default" : ""
+    },
+    "DSTenantPassword" : {
+      "Description" : "Team Deep Security Manager Tenant Password",
+      "Type" : "String",
+      "Default" : ""
+    },
+    "TeamPassword" : {
+      "Type" : "String"
+    },
+    "MtDsmFqdn" : {
+      "Type" : "String",
+      "Default" : "dsm.trenddemos.com"
+    },
+    "IncludeOsceChallenge" : {
+      "Type" : "String",
+      "Default" : "false"
+    }
+  },
+  "Mappings" : {
+    "Parameters" : {
+      "CfnUrlPrefix" : {
+        "Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/"
+      }
+    }
+  },
+  "Resources": {
+    "InfrastructureStack" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "BaseUrl"
+              },
+              "teamInfrastructure.template"
+            ]
+          ]
+        }
+      }
+    },
+    "DeepSecurity" : {
+      "Condition" : "SingleTenant",
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : {
+          "Fn::Join" : [
+            "",
+            [
+              { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] },
+              "RHEL/MasterRH96.template"
+            ]
+          ]
+        },
+        "Parameters"  : {
+          "AWSIKeyPairName" : {
+            "Ref" : "AWSIKeyPairName"
+          },
+          "AWSIVPC"         : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.VPCID" ]},
+          "DSISubnetID"         : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet2" ]},
+          "DBIRDSInstanceSize"         : "db.m4.large",
+          "DBIStorageAllocation"         : "50",
+          "DBPBackupDays"         : "1",
+          "DBPCreateDbInstance"         : "Yes" ,
+          "DBICAdminName"         : "DsmAdmin",
+          "DBICAdminPassword"         : {
+            "Ref" : "DeepSecurityAdminPass"
+          },
+          "DBPEngine"         : "Oracle",
+          "DBPEndpoint" : "" ,
+          "DBPName"         : "dsm",
+          "DSCAdminName"         : {
+            "Ref" : "DeepSecurityAdminName"
+          },
+          "DSCAdminPassword"         : {
+            "Ref" : "DeepSecurityAdminPass"
+          },
+          "DSIMultiNode"         : "1" ,
+          "DSIPLicenseKey" : "AP-5JV8-BGXQE-LVP7P-DBWKX-3VXY2-DQNZN",
+          "DSIPHeartbeatPort" : "4120",
+          "DSIPGUIPort"       : "443",
+          "DSIPInstanceType"         : "m4.large",
+          "DBISubnet1"         : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet2" ]},
+          "DBISubnet2"         : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet1" ]},
+          "DBPMultiAZ": "false",
+          "CfnUrlPrefix" : { "Fn::FindInMap" : [ "Parameters", "CfnUrlPrefix", "Prefix" ] }
+        }
+      }
+    },
+    "MorningStack" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "BaseUrl"
+              },
+              "teamInstancesDsAtk.template"
+            ]
+          ]
+        },
+        "Parameters" : {
+          "TeamName": { "Ref": "TeamName" },
+          "AWSIKeyPairName" : { "Ref" : "AWSIKeyPairName" },
+          "AWSIVPC" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.VPCID" ]},
+          "PublicSubnetID" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet1" ]},
+          "PrivateSubnetID" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet1" ]},
+          "Build" : { "Ref": "Build" },
+          "DSTenantId" : {
+            "Fn::If" : [ "SingleTenant",
+              { "Ref" : "AWS::NoValue" },
+              { "Ref": "DSTenantId" }
+            ]
+          },
+          "DSTenantPassword" : {
+            "Fn::If" : [ "SingleTenant",
+              { "Ref" : "AWS::NoValue" },
+              { "Ref": "DSTenantPassword" }
+            ]
+          },
+          "TeamPassword" : { "Ref": "TeamPassword" },
+          "MtDsmFqdn" : { "Ref": "MtDsmFqdn" }
+        }
+      }
+    },
+    "AfternoonStack" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "BaseUrl"
+              },
+              "teamInstancesDsDef.template"
+            ]
+          ]
+        },
+        "Parameters" : {
+          "TeamName": { "Ref": "TeamName" },
+          "AWSIKeyPairName" : { "Ref" : "AWSIKeyPairName" },
+          "AWSIVPC" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.VPCID" ]},
+          "PublicSubnetID" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet1" ]},
+          "PrivateSubnetID" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet1" ]},
+          "Build" : { "Ref": "Build" },
+          "DSTenantId" : {
+            "Fn::If" : [ "SingleTenant",
+              { "Ref" : "AWS::NoValue" },
+              { "Ref": "DSTenantId" }
+            ]
+          },
+          "DSTenantPassword" : {
+            "Fn::If" : [ "SingleTenant",
+              { "Ref" : "AWS::NoValue" },
+              { "Ref": "DSTenantPassword" }
+            ]
+          },
+          "DeepSecurityHeartbeat" : { "Fn::If" : [ "SingleTenant", { "Fn::GetAtt" : [ "DeepSecurity", "Outputs.DeepSecurityHeartbeat" ] }, { "Ref": "AWS::NoValue" } ] },
+          "TeamPassword" : { "Ref": "TeamPassword" },
+          "MtDsmFqdn" : { "Ref": "MtDsmFqdn" }
+        }
+      }
+    },
+    "OSCEStack" : {
+      "Condition" : "LaunchOsce",
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "BaseUrl"
+              },
+              "officescan.template"
+            ]
+          ]
+        },
+        "Parameters" : {
+          "TeamName": { "Ref": "TeamName" },
+          "AWSIKeyPairName" : { "Ref": "AWSIKeyPairName" },
+          "AWSIVPC" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.VPCID" ]},
+          "PublicSubnetID" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet1" ]},
+          "PrivateSubnetID1" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet1" ]},
+          "PrivateSubnetID2" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet2" ]},
+          "Day1JmpSecurityGroupID" : { "Fn::GetAtt" : [ "MorningStack", "Outputs.JmpSecurityGroups" ]}
+        }
+      }
+    },
+    "Day2DsmRoute53Entries" : {
+      "Condition" : "SingleTenant",
+      "Type" : "AWS::Route53::RecordSetGroup",
+      "Properties" : {
+        "Comment" : "trenddemos.com entry for hybridcloudworkshop Day2",
+        "HostedZoneId" : "Z54BUX0B2EC7C",
+        "RecordSets" : [
+          {
+            "Name" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "TeamName" },
+                  ".dsm.trenddemos.com."
+                ]
+              ]
+            },
+            "Type" : "A",
+            "AliasTarget" : {
+              "HostedZoneId" : { "Fn::GetAtt" : [ "DeepSecurity", "Outputs.PublicELBCanonicalHostedZoneNameID" ] },
+              "DNSName" : { "Fn::GetAtt" : [ "DeepSecurity", "Outputs.PublicELBDNSName" ] }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "Conditions" : {
+    "SingleTenant" : {
+      "Fn::Equals" : [
+        { "Ref": "Build" },
+        "ST"
+      ]
+    },
+    "LaunchOsce" : {
+      "Fn::Equals" : [
+        { "Ref": "IncludeOsceChallenge" },
+        "true"
+      ]
+    }
+  }
+}

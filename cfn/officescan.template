@@ -1,0 +1,264 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Parameters" : {
+    "AWSIKeyPairName" : {
+      "Description" : "Existing key pair to use for connecting to your Deep Security Manager Instance",
+      "Type"        : "AWS::EC2::KeyPair::KeyName",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "ConstraintDescription" : "Select an existing EC2 Key Pair."
+    },
+    "AWSIVPC"         : {
+      "Description" : "VPC for this team",
+      "Type"        : "AWS::EC2::VPC::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*"
+    },
+    "PublicSubnetID"     : {
+      "Description" : "Public Subnet for ATK instance",
+      "Type"        : "AWS::EC2::Subnet::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*",
+      "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+    },
+    "PrivateSubnetID1"     : {
+      "Description" : "Private Subnet for VTM instance",
+      "Type"        : "AWS::EC2::Subnet::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*",
+      "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+    },
+    "PrivateSubnetID2"     : {
+      "Description" : "Private Subnet for VTM instance",
+      "Type"        : "AWS::EC2::Subnet::Id",
+      "MinLength"   : "1",
+      "MaxLength"   : "255",
+      "AllowedPattern" : "[-_a-zA-Z0-9]*",
+      "ConstraintDescription" : "Subnet ID must exist in the chosen VPC"
+    },
+    "TeamName" :{
+      "Description" : "Name of CTF Team",
+      "Type" : "String"
+    },
+    "Day1JmpSecurityGroupID" :{
+      "Description" : "SSG from jump box",
+      "Type" : "AWS::EC2::SecurityGroup::Id"
+    }
+  },
+  "Resources": {
+    "OsceServer" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : "osce-server-instance-role",
+        "ImageId" : "ami-45e3ec52",
+        "InstanceType" : "c4.large",
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "TeamName"},
+                  " OSCE Server"
+                ]
+              ]
+            }
+          }
+        ],
+        "KeyName" : { "Ref": "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : { "Ref" : "PrivateSubnetID1" },
+            "AssociatePublicIpAddress" : "false",
+            "GroupSet"                 : [
+              {
+                "Ref" : "OsceServerSecurityGroup"
+              }
+            ],
+            "PrivateIpAddress" : "192.168.1.32"
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64" : {
+            "Fn::Join" : [
+              "",
+              [
+                "<powershell>\n",
+                "Start-Transcript -path \"$env:temp\\osceps.log\" -append\n",
+                "(New-Object System.Net.WebClient).DownloadFile(\"https://s3.amazonaws.com/aws-cli/AWSCLI64.msi\", \"$env:temp\\AWSCLI64.msi\")\n",
+                "Start-Process $env:temp\\AWSCLI64.msi /qn -Wait\n",
+                "$env:Path += \";C:\\Program Files\\Amazon\\AWSCLI\\\"\n",
+                "Start-Process \"C:\\Program Files\\Amazon\\AWSCLI\\aws.exe\" -ArgumentList \"s3 cp s3://osce-installer/OSCE_AWS.zip $env:temp\" -Wait\n",
+                "Expand-Archive $env:temp\\OSCE_AWS.zip $env:temp\\\n",
+                "Start-Process $env:temp\\OSCE_AWS\\osce_xg_win_en_gm_b1222\\setup.exe -ArgumentList \"-s -f1$env:temp\\OSCE_AWS\\osce_xg_win_en_gm_b1222\\setup.iss -f2$env:temp\\OSCE_AWS\\osce_xg_win_en_gm_b1222\\install.log\" -Wait\n",
+                "</powershell>"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "Day2W7Clean" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : "RunCommand",
+        "ImageId" : "ami-48d9345e",
+        "InstanceType" : "c4.large",
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "TeamName"},
+                  " Clean W7"
+                ]
+              ]
+            }
+          }
+        ],
+        "KeyName" : { "Ref": "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : { "Ref" : "PrivateSubnetID1" },
+            "AssociatePublicIpAddress" : "false",
+            "GroupSet"                 : [
+              {
+                "Ref" : "W7SecurityGroup"
+              }
+            ],
+            "PrivateIpAddress" : "192.168.1.30"
+          }
+        ]
+      }
+    },
+    "Day2W7Compromised" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "IamInstanceProfile" : "RunCommand",
+        "ImageId" : "ami-a0706bb7",
+        "InstanceType" : "t2.medium",
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "TeamName"},
+                  " Compromised W7"
+                ]
+              ]
+            }
+          }
+        ],
+        "KeyName" : { "Ref": "AWSIKeyPairName" },
+        "NetworkInterfaces"  : [
+          {
+            "DeviceIndex" : "0",
+            "SubnetId"    : { "Ref" : "PrivateSubnetID1" },
+            "AssociatePublicIpAddress" : "false",
+            "GroupSet"                 : [
+              {
+                "Ref" : "W7SecurityGroup"
+              }
+            ],
+            "PrivateIpAddress" : "192.168.1.31"
+          }
+        ]
+      }
+    },
+    "W7SecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow all Inbound to VTM from ATK instance",
+        "VpcId" : { "Ref" : "AWSIVPC" },
+        "SecurityGroupIngress" : [
+          {
+            "IpProtocol" : "tcp",
+            "FromPort"   : "12345",
+            "ToPort"     : "12345",
+            "SourceSecurityGroupId"     : { "Ref" : "OsceServerSecurityGroup" }
+          },
+          {
+            "IpProtocol" : "tcp",
+            "FromPort"   : "3389",
+            "ToPort"     : "3389",
+            "SourceSecurityGroupId"     : { "Ref" : "Day1JmpSecurityGroupID" }
+          }
+        ],
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "W7SecurityGroup"
+          }
+        ]
+      }
+    },
+    "OsceServerSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Allow all Inbound to VTM from ATK instance",
+        "VpcId" : { "Ref" : "AWSIVPC" },
+        "SecurityGroupEgress"  : [
+          {
+            "IpProtocol" : "-1",
+            "CidrIp"     : "0.0.0.0/0"
+          }
+        ],
+        "Tags" : [
+          {
+            "Key" : "Name",
+            "Value" : "OsceServerSecurityGroup"
+          }
+        ]
+      }
+    },
+    "OsceServerSslIngressFromW7Clients" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId" : {
+          "Ref" : "OsceServerSecurityGroup"
+        },
+        "IpProtocol" : "tcp",
+        "FromPort"   : "443",
+        "ToPort"     : "443",
+        "SourceSecurityGroupId" : {
+          "Ref" : "W7SecurityGroup"
+        }
+      }
+    },
+    "OsceServerHttpIngressFromW7Clients" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId" : {
+          "Ref" : "OsceServerSecurityGroup"
+        },
+        "IpProtocol" : "tcp",
+        "FromPort"   : "80",
+        "ToPort"     : "80",
+        "SourceSecurityGroupId" : {
+          "Ref" : "W7SecurityGroup"
+        }
+      }
+    }
+  },
+  "Outputs" : {
+    "W7CleanInstanceId" : { "Value" : { "Ref" : "Day2W7Clean" } },
+    "W7CompromisedInstanceId" : { "Value" : { "Ref" : "Day2W7Compromised" } }
+  }
+}

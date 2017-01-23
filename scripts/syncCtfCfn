@@ -1,0 +1,1 @@
+aws s3 sync ~/git/tmThreatChallenge/cfn/ s3://trendctf/cfn/ --profile ctfUser --acl public-read
