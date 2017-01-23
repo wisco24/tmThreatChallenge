@@ -204,7 +204,7 @@
               "",
               [
                 "#!/bin/bash -xe\n",
-                { "Fn::Sub" : [ "curl -o https://${BaseUrl}/scripts/orchestration/setupControllerInstance.sh /home/ec2-user/setupControllerInstance.sh\n", { "BaseUrl": { "Ref": "BaseUrl" } } ] },
+                "curl -o https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh /home/ec2-user/setupControllerInstance.sh\n",
                 "cd /home/ec2-user/; ./setupControllerInstance.sh\n",
                 "mkdir /home/ec2-user/variables\n",
                 { "Fn::Sub" : [ "echo ${vpcid} > /home/ec2-user/variables/vpcid\n", { "vpcid": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.VPCID" ] } } ] },
@@ -257,7 +257,7 @@
               "",
               [
                 "#!/bin/bash -xe\n",
-                { "Fn::Sub" : [ "curl -o https://${BaseUrl}/scripts/orchestration/setupCtfInstance.sh /home/ubuntu/setupCtfInstance.sh\n", { "BaseUrl": { "Ref": "BaseUrl" } } ] },
+                "curl -o https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh /home/ubuntu/setupCtfInstance.sh\n",
                 "cd /home/ubuntu/; ./setupCtfInstance.sh\n"
               ]
             ]
