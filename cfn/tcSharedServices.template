@@ -220,7 +220,7 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : { "Ref": "ControllerInstanceProfile" },
-        "ImageId" : "ami-9be6f38c",
+        "ImageId" : "ami-2d57433a",
         "InstanceType" : "m4.large",
         "Tags"               : [
           {
