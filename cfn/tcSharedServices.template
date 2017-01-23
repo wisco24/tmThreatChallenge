@@ -170,11 +170,19 @@
         "Tags"               : [
           {
             "Key" : "Name",
-            "Value" : "Threat Challenges Controller"
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "EventName"},
+                  " Threat Challenges Controller"
+                ]
+              ]
+            }
           },
           {
             "Key" : "Role",
-            "Value" : "StudentAttack"
+            "Value" : "SharedServices"
           }
         ],
         "KeyName" : { "Ref" : "AWSIKeyPairName" },
@@ -226,7 +234,15 @@
         "Tags"               : [
           {
             "Key" : "Name",
-            "Value" : "Threat Challenges Ctf Server"
+            "Value" : {
+              "Fn::Join" : [
+                "",
+                [
+                  { "Ref" : "EventName"},
+                  " Threat Challenges Ctf Server"
+                ]
+              ]
+            }
           },
           {
             "Key" : "Role",
