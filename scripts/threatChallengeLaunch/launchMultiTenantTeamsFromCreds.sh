@@ -5,15 +5,15 @@ dsmT0Admin='t0Admin'
 dsmConsolePort='443'
 dsStackname="sharedDsStack"
 
-dsmT0Password=$(cat ../../variables/t0AdminPassword)
-eventName=$(cat ../../variables/eventName)
+dsmT0Password=$(cat /home/ec2-user/variables/t0AdminPassword)
+eventName=$(cat /home/ec2-user/variables/eventName)
 keyPair=threatChallengeKeyPair
-activationCode=$(cat ../../variables/featureAC)
-mtActivationCode=$(cat ../../variables/multiTenantAC)
-vpc=$(cat ../../variables/vpcid)
-dsmSubnet=$(cat ../../variables/dsmSubnet)
-dbSubnet1=$(cat ../../variables/dbSubnet1)
-dbSubnet2=$(cat ../../variables/dbSubnet2)
+activationCode=$(cat /home/ec2-user/variables/featureAC)
+mtActivationCode=$(cat /home/ec2-user/variables/multiTenantAC)
+vpc=$(cat /home/ec2-user/variables/vpcid)
+dsmSubnet=$(cat /home/ec2-user/variables/dsmSubnet)
+dbSubnet1=$(cat /home/ec2-user/variables/dbSubnet1)
+dbSubnet2=$(cat /home/ec2-user/variables/dbSubnet2)
 
 
 
