@@ -34,4 +34,7 @@ do
     fi
 done
 
+echo "Deleting challenge KeyPair"
+aws ec2 delete-key-pair --key-name $(cat /home/ec2-user/variables/sshkey)
+
 echo -e "sko mass test cleanup complete. Deleted ${deletedstacks} stacks and ${deletedusers} users"
