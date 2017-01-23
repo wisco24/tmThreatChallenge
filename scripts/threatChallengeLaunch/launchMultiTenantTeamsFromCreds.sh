@@ -7,7 +7,7 @@ dsStackname="sharedDsStack"
 
 dsmT0Password=$(cat /home/ec2-user/variables/t0AdminPassword)
 eventName=$(cat /home/ec2-user/variables/eventName)
-keyPair=threatChallengeKeyPair
+keyPair=$(cat /home/ec2-user/variables/sshkey)
 activationCode=$(cat /home/ec2-user/variables/featureAC)
 mtActivationCode=$(cat /home/ec2-user/variables/multiTenantAC)
 vpc=$(cat /home/ec2-user/variables/vpcid)
