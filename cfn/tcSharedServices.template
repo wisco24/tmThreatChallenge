@@ -197,7 +197,9 @@
               [
                 "#!/bin/bash -xe\n",
                 "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh -o /home/ec2-user/setupControllerInstance.sh\n",
-                "cd /home/ec2-user/; ./setupControllerInstance.sh\n",
+                "cd /home/ec2-user/\n"
+                "chmod +x ./setupControllerInstance.sh\n",
+                "./setupControllerInstance.sh\n",
                 "mkdir /home/ec2-user/variables\n",
                 { "Fn::Sub" : [ "echo ${vpcid} > /home/ec2-user/variables/vpcid\n", { "vpcid": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.VPCID" ] } } ] },
                 { "Fn::Sub" : [ "echo ${dsmSubnet} > /home/ec2-user/variables/dsmSubnet\n", { "dsmSubnet": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PublicSubnet1" ] } } ] },
@@ -250,7 +252,7 @@
               [
                 "#!/bin/bash -xe\n",
                 "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh -o /home/ubuntu/setupCtfInstance.sh\n",
-                "cd /home/ubuntu/; ./setupCtfInstance.sh\n"
+                "cd /home/ubuntu/; chmod +x ./setupCtfInstance.sh; ./setupCtfInstance.sh\n"
               ]
             ]
           }
