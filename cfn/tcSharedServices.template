@@ -17,7 +17,7 @@
     },
     "EventName" : {
       "Description" : "Name of the challenge event (ex NYC2017). Will be used in domain name. max 10 char",
-      "Type" : "String"
+      "Type" : "String",
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "MinLength" : 2,
       "MaxLength" : 10
@@ -147,7 +147,6 @@
             "ToPort": "443",
             "CidrIp": "0.0.0.0/0"
           },
-          ,
           {
             "IpProtocol": "tcp",
             "FromPort" : "22",
@@ -215,7 +214,7 @@
                 { "Fn::Sub" : [ "echo ${featureAC} > /home/ec2-user/variables/featureAC\n", { "featureAC": { "Ref": "FeatureAC" } } ] },
                 { "Fn::Sub" : [ "echo ${multiTenantAC} > /home/ec2-user/variables/multiTenantAC\n", { "multiTenantAC": { "Ref": "MultiTenantAC" } } ] },
                 { "Fn::Sub" : [ "echo ${eventName} > /home/ec2-user/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
-                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "eventName": { "Ref": "T0AdminPassword" } } ] }
+                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "T0AdminPassword" } } ] }
               ]
             ]
           }
