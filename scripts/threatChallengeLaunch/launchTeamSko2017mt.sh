@@ -11,6 +11,7 @@ teamname=${5}
 teamPassword=${6}
 iamusername=${teamname}-dsmservice
 logfile=${teamname}.log
+keyPair=$(cat /home/ec2-user/variables/sshkey)
 
 echo "t0user: ${t0User}" >> ${logfile}
 echo "t0Pass: ${t0Pass}" >> ${logfile}
@@ -50,6 +51,7 @@ ParameterKey=DSTenantPassword,ParameterValue=${tenantCreds[0]} \
 ParameterKey=DeepSecurityAdminPass,ParameterValue=${teamPassword} \
 ParameterKey=TeamPassword,ParameterValue=${teamPassword} \
 ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
+ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair}
 --tags \
 Key=TeamName,Value=${teamname} \
 Key=CtfRole,Value=SkoTeamStack
