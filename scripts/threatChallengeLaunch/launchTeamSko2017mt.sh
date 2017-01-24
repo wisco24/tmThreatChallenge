@@ -51,7 +51,7 @@ ParameterKey=DSTenantPassword,ParameterValue=${tenantCreds[0]} \
 ParameterKey=DeepSecurityAdminPass,ParameterValue=${teamPassword} \
 ParameterKey=TeamPassword,ParameterValue=${teamPassword} \
 ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
-ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair}
+ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
 --tags \
 Key=TeamName,Value=${teamname} \
 Key=CtfRole,Value=SkoTeamStack
