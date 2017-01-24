@@ -22,7 +22,7 @@ region=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document |
 echo "region = ${region}" >> .aws/config
 ##todo: uncomment when shared services testing is complete
 keyname="threatChallengeKey-$(dd if=/dev/urandom bs=3 count=1 | base64)-${region}"
-createKeyResponse=$(aws ec2 create-key-pair --key-name ${keyname})
+createKeyResponse=$(aws ec2 create-key-pair --region ${region} --key-name ${keyname})
 echo $createKeyResponse | jq -r '.KeyMaterial' > /home/ec2-user/teamKey.private
 echo $keyname > /home/ec2-user/variables/sshkey
 ##todo: setup bashrc
