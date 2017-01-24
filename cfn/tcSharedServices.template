@@ -204,12 +204,6 @@
               "",
               [
                 "#!/bin/bash -xe\n",
-                "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh -o /home/ec2-user/setupControllerInstance.sh\n",
-                "cd /home/ec2-user/\n",
-                "chmod +x ./setupControllerInstance.sh\n",
-                "./setupControllerInstance.sh\n",
-                "mkdir /home/ec2-user/variables\n",
-                "chown ec2-user:ec2-user /home/ec2-user/variables\n",
                 { "Fn::Sub" : [ "echo ${vpcid} > /home/ec2-user/variables/vpcid\n", { "vpcid": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.VPCID" ] } } ] },
                 { "Fn::Sub" : [ "echo ${dsmSubnet} > /home/ec2-user/variables/dsmSubnet\n", { "dsmSubnet": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PublicSubnet1" ] } } ] },
                 { "Fn::Sub" : [ "echo ${dbSubnet1} > /home/ec2-user/variables/dbSubnet1\n", { "dbSubnet1": { "Fn::GetAtt": [ "InfrastructureStack", "Outputs.PrivateSubnet1" ] } } ] },
@@ -218,7 +212,13 @@
                 { "Fn::Sub" : [ "echo ${featureAC} > /home/ec2-user/variables/featureAC\n", { "featureAC": { "Ref": "FeatureAC" } } ] },
                 { "Fn::Sub" : [ "echo ${multiTenantAC} > /home/ec2-user/variables/multiTenantAC\n", { "multiTenantAC": { "Ref": "MultiTenantAC" } } ] },
                 { "Fn::Sub" : [ "echo ${eventName} > /home/ec2-user/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
-                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "DsmT0Password" } } ] }
+                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "DsmT0Password" } } ] },
+                "cd /home/ec2-user/\n",
+                "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh -o /home/ec2-user/setupControllerInstance.sh\n",
+                "chmod +x ./setupControllerInstance.sh\n",
+                "./setupControllerInstance.sh\n",
+                "mkdir /home/ec2-user/variables\n",
+                "chown ec2-user:ec2-user /home/ec2-user/variables\n"
               ]
             ]
           }
