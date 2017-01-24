@@ -20,7 +20,6 @@ chown -R ec2-user:ec2-user .aws
 echo "[default]" > .aws/config
 region=$(curl http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
 echo "region = ${region}" >> .aws/config
-##todo: uncomment when shared services testing is complete
 keyname="threatChallengeKey-$(dd if=/dev/urandom bs=3 count=1 | base64)-${region}"
 createKeyResponse=$(aws ec2 create-key-pair --region ${region} --key-name ${keyname})
 echo $createKeyResponse | jq -r '.KeyMaterial' > /home/ec2-user/teamKey.private
