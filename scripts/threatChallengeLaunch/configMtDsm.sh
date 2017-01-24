@@ -5,30 +5,30 @@ dsmConsolePort='443'
 dsmT0Password=${1}
 mtActivationCode=${2}
 dsmFqdn=${3}
-dsStackname=${4}
+dsStackName=${4}
 
 
 
 
 
-logfile=${dsStackname}.log
+logfile=${dsStackName}.log
 
 
 echo "Starting DSM Configuration" >> ${logfile} 2>&1
 echo "Waiting for Stack build to complete" >> ${logfile}  2>&1
 
-dsStackStatus=$(aws cloudformation describe-stacks --stack-name ${dsStackname} --query 'Stacks[].StackStatus' --output text)
+dsStackStatus=$(aws cloudformation describe-stacks --stack-name ${dsStackName} --query 'Stacks[].StackStatus' --output text)
 
 until [ ${dsStackStatus} == "CREATE_COMPLETE" ]
 do
     sleep 60
-    dsStackStatus=$(aws cloudformation describe-stacks --stack-name ${dsStackname} --query 'Stacks[].StackStatus' --output text)
+    dsStackStatus=$(aws cloudformation describe-stacks --stack-name ${dsStackName} --query 'Stacks[].StackStatus' --output text)
 done
 
 echo "Set DSM Route53 entry" >> ${logfile} 2>&1
-../orchestration/setDsmRoute53.sh ${dsStackname} ${dsmFqdn}
+../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn}
 echo "Set cert on public ELB"
-../orchestration/setDsmCert.sh ${dsStackname}
+../orchestration/setDsmCert.sh ${dsStackName}
 echo "Wait 10 minutes for DNS" >> ${logfile} 2>&1
 sleep 600
 echo "Create EBT for T0" >> ${logfile} 2>&1
