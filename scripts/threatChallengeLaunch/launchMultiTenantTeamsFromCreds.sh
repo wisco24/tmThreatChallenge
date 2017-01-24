@@ -3,7 +3,7 @@
 
 dsmT0Admin='t0Admin'
 dsmConsolePort='443'
-dsStackname="sharedDsStack"
+dsStackName="sharedDsStack"
 
 dsmT0Password=$(cat /home/ec2-user/variables/t0AdminPassword)
 eventName=$(cat /home/ec2-user/variables/eventName)
@@ -25,7 +25,7 @@ logfile=launchMultiLog
 echo "Launch MT DSM" >> ${logfile} 2>&1
 ./launchMtDSM.sh "${dsmT0Password}" ${activationCode} ${keyPair} ${vpc} ${dsmSubnet} ${dbSubnet1} ${dbSubnet2} ${dsStackName}
 echo "Running configMtDsm.sh" >> ${logfile} 2>&1
-configMtDsm.sh "${dsmT0Password}" ${mtActivationCode} ${dsmFqdn} ${dsStackName}
+./configMtDsm.sh "${dsmT0Password}" ${mtActivationCode} ${dsmFqdn} ${dsStackName}
 echo "Sleep 60 for manager multi tenant settings"
 sleep 60
 echo "Getting creds from S3 and storing new file locally" >> ${logfile} 2>&1
