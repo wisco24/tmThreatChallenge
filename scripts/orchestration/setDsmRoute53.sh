@@ -8,9 +8,9 @@ fi
 
 ##todo: get keys for trenddemos or lookup parameterized hosted zone
 
-dsmurl=$(aws cloudformation describe-stacks --stack-name ${stackname} --profile ctfService --query 'Stacks[0].Outputs[?OutputKey==`DeepSecurityConsole`].OutputValue' --output text)
+dsmurl=$(aws cloudformation describe-stacks --stack-name ${stackname} --query 'Stacks[0].Outputs[?OutputKey==`DeepSecurityConsole`].OutputValue' --output text)
 dsmfqdn=$(echo $dsmurl | cut -d'/' -f3 | cut -d':' -f1)
-aws route53 change-resource-record-sets --profile ctfService --cli-input-json '{
+aws route53 change-resource-record-sets --cli-input-json '{
   "HostedZoneId": "Z54BUX0B2EC7C",
   "ChangeBatch" :{
     "Comment": "update DSM for hybrid cloud workshop ctf", 
