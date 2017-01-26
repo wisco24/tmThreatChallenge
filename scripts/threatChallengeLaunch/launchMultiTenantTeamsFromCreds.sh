@@ -17,8 +17,8 @@ dbSubnet2=$(cat /home/ec2-user/variables/dbSubnet2)
 
 
 
-#dsmFqdn="dsm.${eventName}.trenddemos.com"
-dsmFqdn=dsm.trenddemos.com
+dsmFqdn="dsm.${eventName}.trenddemos.com"
+#dsmFqdn=dsm.trenddemos.com
 
 logfile=launchMultiLog
 
