@@ -1,7 +1,7 @@
 #!/bin/bash
 stackname=${1}
 dnsname='dsm.trenddemos.com'
-if [[ -n {2} ]]
+if [[ -n ${2} ]]
 then
     dnsname=${2}
 fi
