@@ -9,14 +9,14 @@ dsmSubnet=${5}
 dbSubnet1=${6}
 dbSubnet2=${7}
 stackname=${8}
-eventName=${9}
+
 
 
 
 
 
 aws cloudformation create-stack --disable-rollback \
---stack-name ${stackname}-${eventName} \
+--stack-name ${stackname} \
 --output text \
 --capabilities CAPABILITY_IAM \
 --template-url "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/RHEL/MasterRH96.template" \
