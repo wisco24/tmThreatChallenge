@@ -11,6 +11,7 @@ sudo yum -y install jq
 sudo yum -y install perl-XML-Twig
 sudo yum -y install libunwind libicu
 
+
 cd /home/ec2-user/
 git clone https://github.com/424D57/tmThreatChallenge.git
 chown -R ec2-user:ec2-user tmThreatChallenge
@@ -24,5 +25,7 @@ keyname="threatChallengeKey-$(dd if=/dev/urandom bs=3 count=1 | base64)-${region
 createKeyResponse=$(aws ec2 create-key-pair --region ${region} --key-name ${keyname})
 echo $createKeyResponse | jq -r '.KeyMaterial' > /home/ec2-user/teamKey.private
 echo $keyname > /home/ec2-user/variables/sshkey
+yum -y install nginx
+service nginx start
 ##todo: setup bashrc
 

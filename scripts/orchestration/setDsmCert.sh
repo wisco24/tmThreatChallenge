@@ -2,7 +2,6 @@
 stackname=${1}
 certid=${2}
 
-##todo: Get cert from lets encrypt and upload to IAM
 
 elbname=$(aws cloudformation describe-stacks --stack-name ${stackname} --query 'Stacks[].[Outputs[?OutputKey==`PublicELBDNSName`].OutputValue[]]' --output text)
 shortname=${elbname%-*-*-*}

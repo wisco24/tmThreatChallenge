@@ -1,15 +1,8 @@
 #!/bin/bash
-stackname=${1}
-dnsname='dsm.trenddemos.com'
-if [[ -n ${2} ]]
-then
-    dnsname=${2}
-fi
+dnsname=${1}
+ctrlDnsName=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
 
-##todo: get keys for trenddemos or lookup parameterized hosted zone
 
-dsmurl=$(aws cloudformation describe-stacks --stack-name ${stackname} --query 'Stacks[0].Outputs[?OutputKey==`DeepSecurityConsole`].OutputValue' --output text)
-elbfqdn=$(echo $dsmurl | cut -d'/' -f3 | cut -d':' -f1)
 aws route53 change-resource-record-sets --cli-input-json '{
   "HostedZoneId": "Z54BUX0B2EC7C",
   "ChangeBatch" :{
@@ -22,7 +15,7 @@ aws route53 change-resource-record-sets --cli-input-json '{
           "Type": "A", 
           "AliasTarget": {
             "HostedZoneId": "Z35SXDOTRQ7X7K", 
-            "DNSName": "'${elbfqdn}'",
+            "DNSName": "'${ctrlDnsName}'",
             "EvaluateTargetHealth": false
           } 
         }
