@@ -12,6 +12,7 @@ teamPassword=${6}
 iamusername=${teamname}-dsmservice
 logfile=${teamname}.log
 keyPair=$(cat /home/ec2-user/variables/sshkey)
+eventName=$(cat /home/ec2-user/variables/eventName)
 
 echo "t0user: ${t0User}" >> ${logfile}
 echo "t0Pass: ${t0Pass}" >> ${logfile}
@@ -40,7 +41,7 @@ echo -e "\nCreate Stack\n"
 echo "Create ${teamname} cfn stack" >> ${logfile} 2>&1
 aws cloudformation create-stack --disable-rollback \
 --output text \
---stack-name ${teamname}-SkoRoot \
+--stack-name ${teamname}-${eventName}-TMTC \
 --capabilities CAPABILITY_IAM \
 --template-url "https://s3.amazonaws.com/trendctf/cfn/threatChallengeTeam.template" \
 --parameters \
