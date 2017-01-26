@@ -28,7 +28,8 @@ done
 echo "Set DSM Route53 entry" >> ${logfile} 2>&1
 ../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn}
 echo "Set cert on public ELB"
-../orchestration/setDsmCert.sh ${dsStackName}
+##todo: remove hardcoded certificate
+../orchestration/setDsmCert.sh ${dsStackName} "arn:aws:acm:us-east-1:030740019207:certificate/0f80dc13-a46c-4e67-8563-37286127ee5a"
 echo "Wait 10 minutes for DNS" >> ${logfile} 2>&1
 sleep 600
 echo "Create EBT for T0" >> ${logfile} 2>&1
