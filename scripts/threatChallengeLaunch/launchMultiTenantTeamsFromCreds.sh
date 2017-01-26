@@ -36,7 +36,7 @@ do
     creds=(${line})
     teamlog=${creds[0]}.log
     echo "Launching environment for ${creds[0]}" >> ${logfile} 2>&1
-    nohup ./launchTeamSko2017mt.sh ${dsmT0Admin} "${dsmT0Password}" ${dsmFqdn} ${dsmConsolePort} ${creds[0]} ${creds[1]} &
+    nohup ./launchTmtcTeam.sh ${dsmT0Admin} "${dsmT0Password}" ${dsmFqdn} ${dsmConsolePort} ${creds[0]} ${creds[1]} &
     sleep 150
 done < "${filename}"
 echo "Removing creds file" >> ${logfile} 2>&1

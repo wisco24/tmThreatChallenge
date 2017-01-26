@@ -1,4 +1,4 @@
-## launchTeamSko2017mt.sh ${teamname} ${tenantid} ${tenantpw}
+## launchTmtcTeam.sh ${teamname} ${tenantid} ${tenantpw}
 ## --debug --disable-rollback \
 #!/bin/bash
 
