@@ -23,7 +23,7 @@ echo "teamPassword: ${teamPassword}" >> ${logfile}
 
 echo -e "\nCreate Tenant\n"
 echo "Create ${teamname} DS Tenant" >> ${logfile} 2>&1
-tenantCreds=($(../dsm/ds10-rest-createTenant.sh ${t0User} ${t0Pass} ${dsmFqdn} ${dsmConsolePort} ${teamname} ${teamPassword}))
+tenantCreds=($(../dsm/ds10-rest-tenantCreate.sh ${t0User} ${t0Pass} ${dsmFqdn} ${dsmConsolePort} ${teamname} ${teamPassword}))
 
 echo -e "\nCreate IAM stuff\n"
 echo "Create IAM stuff for ${teamname}" >> ${logfile} 2>&1
