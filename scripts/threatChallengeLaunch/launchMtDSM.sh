@@ -8,6 +8,7 @@ vpc=${4}
 dsmSubnet=${5}
 dbSubnet1=${6}
 dbSubnet2=${7}
+eventName=${8}
 stackname="tmtcDsStack"
 
 if [ -n ${8} ]
@@ -17,7 +18,7 @@ fi
 
 
 aws cloudformation create-stack --disable-rollback \
---stack-name ${stackname} \
+--stack-name ${stackname}-${eventName} \
 --output text \
 --capabilities CAPABILITY_IAM \
 --template-url "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/RHEL/MasterRH96.template" \
