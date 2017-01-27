@@ -12,7 +12,7 @@ aws route53 change-resource-record-sets --cli-input-json '{
         "Action": "UPSERT", 
         "ResourceRecordSet": {
           "Name": "'${dnsname}'.",
-          "Type": "A", 
+          "Type": "CNAME",
           "AliasTarget": {
             "HostedZoneId": "Z54BUX0B2EC7C",
             "DNSName": "'${ctrlDnsName}'.",
