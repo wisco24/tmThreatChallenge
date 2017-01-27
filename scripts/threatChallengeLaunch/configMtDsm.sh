@@ -6,6 +6,7 @@ dsmT0Password=${1}
 mtActivationCode=${2}
 dsmFqdn=${3}
 dsStackName=${4}
+ctrlFqdn=${5}
 
 
 
@@ -15,7 +16,7 @@ logfile=${dsStackName}.log
 echo "Starting DSM Configuration" >> ${logfile} 2>&1
 
 echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>&1
-../orchestration/setTmpDsmRoute53.sh ${dsmFqdn}
+../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn}
 echo "Get new cert for DSM and upload to IAM" >> ${logfile} 2>&1
 ../orchestration/getCertForElb.sh ${dsmFqdn}
 certArn=$(cat /home/ec2-user/variables/certArn)

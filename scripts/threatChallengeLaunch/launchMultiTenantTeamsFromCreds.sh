@@ -17,16 +17,20 @@ dbSubnet2=$(cat /home/ec2-user/variables/dbSubnet2)
 
 dsStackName="tmtcDsStack-${eventName}"
 
-
+ctfFqdn="ctf.${eventName}.trenddemos.com"
+ctrlFqdn="ctrl.${eventName}.trenddemos.com"
 dsmFqdn="dsm.${eventName}.trenddemos.com"
 #dsmFqdn=dsm.trenddemos.com
+
+echo "Set Controller DNS Name" >> ${logfile} 2>&1
+../orchestration/setCtrlRoute53.sh "ctrl.${eventName}.trenddemos.com"
 
 logfile=launchMultiLog
 
 echo "Launch MT DSM" >> ${logfile} 2>&1
 ./launchMtDSM.sh "${dsmT0Password}" ${activationCode} ${keyPair} ${vpc} ${dsmSubnet} ${dbSubnet1} ${dbSubnet2} ${dsStackName}
 echo "Running configMtDsm.sh" >> ${logfile} 2>&1
-./configMtDsm.sh "${dsmT0Password}" ${mtActivationCode} ${dsmFqdn} ${dsStackName}
+./configMtDsm.sh "${dsmT0Password}" ${mtActivationCode} ${dsmFqdn} ${dsStackName} ${ctrlFqdn}
 echo "Sleep 60 for manager multi tenant settings"
 sleep 60
 echo "Getting creds from S3 and storing new file locally" >> ${logfile} 2>&1

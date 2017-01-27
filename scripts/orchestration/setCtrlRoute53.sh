@@ -1,6 +1,9 @@
 #!/bin/bash
+
 dnsname=${1}
-ctrlDnsName=${2}
+ctrlPublicHostName=$(curl http://169.254.169.254/latest/meta-data/public-hostname)
+
+##todo: get keys for trenddemos or lookup parameterized hosted zone
 
 
 aws route53 change-resource-record-sets --cli-input-json '{
@@ -12,11 +15,10 @@ aws route53 change-resource-record-sets --cli-input-json '{
         "Action": "UPSERT", 
         "ResourceRecordSet": {
           "Name": "'${dnsname}'.",
-          "Type": "A", 
-          "AliasTarget": {
-            "HostedZoneId": "Z35SXDOTRQ7X7K", 
-            "DNSName": "'${ctrlDnsName}'",
-            "EvaluateTargetHealth": false
+          "Type": "CNAME",
+          "ResourceRecords" : [
+            { "Value": "'${ctrlPublicHostName}'" }
+            ]
           } 
         }
       }
