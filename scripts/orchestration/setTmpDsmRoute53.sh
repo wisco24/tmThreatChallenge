@@ -14,8 +14,8 @@ aws route53 change-resource-record-sets --cli-input-json '{
           "Name": "'${dnsname}'.",
           "Type": "A", 
           "AliasTarget": {
-            "HostedZoneId": "Z35SXDOTRQ7X7K", 
-            "DNSName": "'${ctrlDnsName}'",
+            "HostedZoneId": "Z54BUX0B2EC7C",
+            "DNSName": "'${ctrlDnsName}'.",
             "EvaluateTargetHealth": false
           } 
         }
