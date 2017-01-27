@@ -9,17 +9,17 @@ ctrlPublicHostName=$(curl http://169.254.169.254/latest/meta-data/public-hostnam
 aws route53 change-resource-record-sets --cli-input-json '{
   "HostedZoneId": "Z54BUX0B2EC7C",
   "ChangeBatch" :{
-    "Comment": "update DSM for hybrid cloud workshop ctf", 
+    "Comment": "Set ctrl fqdn",
     "Changes": [
       {
         "Action": "UPSERT", 
         "ResourceRecordSet": {
-          "Name": "'${dnsname}'.",
+          "Name": "'${dnsname}'",
           "Type": "CNAME",
+          "TTL" : 300,
           "ResourceRecords" : [
             { "Value": "'${ctrlPublicHostName}'" }
-            ]
-          } 
+          ]
         }
       }
     ]
