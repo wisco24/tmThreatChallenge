@@ -20,6 +20,9 @@ echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>
 echo "Get new cert for DSM and upload to IAM" >> ${logfile} 2>&1
 ../orchestration/getCertForElb.sh ${dsmFqdn}
 certArn=$(cat /home/ec2-user/variables/certArn)
+echo "Delete DSM Route53 record to controller now that we have a cert" >> ${logfile} 2>&1
+../orchestration/delTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn}
+
 
 echo "Waiting for Stack build to complete" >> ${logfile}  2>&1
 
