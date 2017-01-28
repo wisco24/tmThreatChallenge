@@ -136,7 +136,7 @@
         }
       }
     },
-    "MorningStack" : {
+    "DsAtkStack" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL": {
@@ -174,7 +174,7 @@
         }
       }
     },
-    "AfternoonStack" : {
+    "DsDefStack" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL": {
@@ -235,7 +235,7 @@
           "PublicSubnetID" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PublicSubnet1" ]},
           "PrivateSubnetID1" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet1" ]},
           "PrivateSubnetID2" : { "Fn::GetAtt" : [ "InfrastructureStack" , "Outputs.PrivateSubnet2" ]},
-          "Day1JmpSecurityGroupID" : { "Fn::GetAtt" : [ "MorningStack", "Outputs.JmpSecurityGroups" ]}
+          "Day1JmpSecurityGroupID" : { "Fn::GetAtt" : [ "DsAtkStack", "Outputs.JmpSecurityGroups" ]}
         }
       }
     },
