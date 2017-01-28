@@ -6,7 +6,7 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific aliases and functions
-teamPrivateKey="/home/ec2-user/teamKey.private
+teamPrivateKey="/home/ec2-user/teamKey.private"
 eventName=$(cat /home/ec2-user/variables/eventName)
 
 alias reloadshell="exec $SHELL -l"
