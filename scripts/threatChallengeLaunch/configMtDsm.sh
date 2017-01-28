@@ -8,13 +8,15 @@ dsmFqdn=${3}
 dsStackName=${4}
 ctrlFqdn=${5}
 
-
-
 logfile=${dsStackName}.log
+
+
 
 
 echo "Starting DSM Configuration" >> ${logfile} 2>&1
 
+echo "Delete DSM Route53 record possibly leftover from previous build" >> ${logfile} 2>&1
+updateResponse=$(../orchestration/delDsmRoute53.sh ${dsmFqdn})
 echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>&1
 updateResponse=$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn})
 changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
@@ -41,6 +43,7 @@ do
     sleep 60
     dsStackStatus=$(aws cloudformation describe-stacks --stack-name ${dsStackName} --query 'Stacks[].StackStatus' --output text)
 done
+
 
 echo "Set DSM Route53 entry" >> ${logfile} 2>&1
 updateResponse=$(../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn})
