@@ -13,9 +13,9 @@
       "Type" : "String"
     },
     "EventName" : {
-      "Description" : "Name of the challenge event (ex NYC2017). Will be used in domain name. max 10 char",
+      "Description" : "Name of the challenge event (ex NYC2017). Will be used in domain name. Lower case only max 10 char",
       "Type" : "String",
-      "AllowedPattern" : "[a-zA-Z0-9]*",
+      "AllowedPattern" : "[a-z0-9]*",
       "MinLength" : 2,
       "MaxLength" : 10
     },
