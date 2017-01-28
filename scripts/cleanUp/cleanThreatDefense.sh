@@ -23,7 +23,7 @@ allusers=($(aws iam list-users --query Users[].UserName --output text))
 
 for user in ${allusers[@]}
 do
-    if [[ ${user} == *-dsmservice" ]]
+    if [[ ${user} == *"-dsmservice" ]]
     then
         echo "Deleting User ${user}"
         aws iam delete-user-policy --user-name ${user} --policy-name DSMUserRole
