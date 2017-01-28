@@ -61,6 +61,9 @@
     "MtDsmFqdn" : {
       "Type" : "String",
       "Default" : "dsm.trenddemos.com"
+    },
+    "EventName" : {
+      "Type" : "String"
     }
   },
   "Resources" :{
@@ -235,6 +238,8 @@
             "",
             [
               { "Ref" : "TeamName" },
+              ".",
+              { "Ref": "EventName" },
               ".jump.trenddemos.com."
             ]
           ]
