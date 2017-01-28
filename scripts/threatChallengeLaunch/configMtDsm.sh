@@ -16,7 +16,7 @@ logfile=${dsStackName}.log
 echo "Starting DSM Configuration" >> ${logfile} 2>&1
 
 echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>&1
-updateResponse$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn})
+updateResponse=$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn})
 changeID=$(jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
 status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
 until [[ ${status} == 'INSYNC' ]]
