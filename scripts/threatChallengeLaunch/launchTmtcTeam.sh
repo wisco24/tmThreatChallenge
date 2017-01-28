@@ -55,6 +55,7 @@ ParameterKey=TeamPassword,ParameterValue=${teamPassword} \
 ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
 ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
 ParameterKey=EventName,ParameterValue=${eventName} \
+ParameterKey=IncludeOsceChallenge,ParameterValue=true \
 --tags \
 Key=TeamName,Value=${teamname} \
 Key=CtfRole,Value=SkoTeamStack
