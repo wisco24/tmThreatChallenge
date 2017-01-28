@@ -29,7 +29,7 @@ launch-event() {
 }
 
 delete-event() {
-    cd /home/ec2-user/tmThreatChallenge/scripts/cleanup/
+    cd /home/ec2-user/tmThreatChallenge/scripts/cleanUp/
     ./cleanThreatDefense.sh
 }
 
