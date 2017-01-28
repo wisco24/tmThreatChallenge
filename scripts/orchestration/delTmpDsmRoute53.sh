@@ -6,10 +6,10 @@ ctrlDnsName=${2}
 aws route53 change-resource-record-sets --cli-input-json '{
   "HostedZoneId": "Z54BUX0B2EC7C",
   "ChangeBatch" :{
-    "Comment": "update DSM CNAME to ctrl for cert create",
+    "Comment": "Delete CNAME for DSM to ctrl",
     "Changes": [
       {
-        "Action": "UPSERT", 
+        "Action": "DELETE",
         "ResourceRecordSet": {
           "Name": "'${dnsname}'.",
           "Type": "CNAME",
