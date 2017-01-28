@@ -62,6 +62,9 @@
     "IncludeOsceChallenge" : {
       "Type" : "String",
       "Default" : "false"
+    },
+    "EventName" : {
+      "Type" : "String"
     }
   },
   "Mappings" : {
@@ -170,7 +173,8 @@
             ]
           },
           "TeamPassword" : { "Ref": "TeamPassword" },
-          "MtDsmFqdn" : { "Ref": "MtDsmFqdn" }
+          "MtDsmFqdn" : { "Ref": "MtDsmFqdn" },
+          "EventName" : { "Ref": "EventName" }
         }
       }
     },
@@ -209,7 +213,8 @@
           },
           "DeepSecurityHeartbeat" : { "Fn::If" : [ "SingleTenant", { "Fn::GetAtt" : [ "DeepSecurity", "Outputs.DeepSecurityHeartbeat" ] }, { "Ref": "AWS::NoValue" } ] },
           "TeamPassword" : { "Ref": "TeamPassword" },
-          "MtDsmFqdn" : { "Ref": "MtDsmFqdn" }
+          "MtDsmFqdn" : { "Ref": "MtDsmFqdn" },
+          "EventName" : { "Ref": "EventName" }
         }
       }
     },
