@@ -9,9 +9,12 @@ do
     role=($(aws cloudformation describe-stacks --stack-name ${stack} --query 'Stacks[].[Tags[?Key==`CtfRole`].Value[]]' --output text))
     if [[ "${role}" = "SkoTeamStack" ]]
         then
-        aws cloudformation delete-stack --stack-name ${stack}
-        echo -e "Deleting Stack ${stack}\n"
-        ((deletedstacks++))
+        if [[ "${stack}" == *"-TMTC" ]]
+            then
+            aws cloudformation delete-stack --stack-name ${stack}
+            echo -e "Deleting Stack ${stack}\n"
+            ((deletedstacks++))
+        fi
     fi
 done
 
