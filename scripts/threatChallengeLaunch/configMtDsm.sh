@@ -10,22 +10,26 @@ ctrlFqdn=${5}
 
 logfile=${dsStackName}.log
 
-
-
+waitForDnsSync() {
+    updateResponse=${1}
+    changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
+    status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
+        until [[ ${status} == 'INSYNC' ]]
+        do
+            sleep 20
+            status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
+        done
+}
 
 echo "Starting DSM Configuration" >> ${logfile} 2>&1
 
 echo "Delete DSM Route53 record possibly leftover from previous build" >> ${logfile} 2>&1
 updateResponse=$(../orchestration/delDsmRoute53.sh ${dsmFqdn})
+waitForDnsSync ${updateResponse}
+
 echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>&1
 updateResponse=$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn})
-changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
-status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
-until [[ ${status} == 'INSYNC' ]]
-do
-     sleep 20
-     status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
-done
+waitForDnsSync ${updateResponse}
 
 echo "Get new cert for DSM and upload to IAM" >> ${logfile} 2>&1
 ../orchestration/getCertForElb.sh ${dsmFqdn}
@@ -49,14 +53,8 @@ echo "Set DSM Route53 entry" >> ${logfile} 2>&1
 updateResponse=$(../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn})
 echo "Set cert on public ELB"
 ../orchestration/setDsmCert.sh ${dsStackName} "${certArn}"
-echo "Wait minutes for DNS SYNC" >> ${logfile} 2>&1
-changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
-status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
-until [[ ${status} == 'INSYNC' ]]
-do
-     sleep 20
-     status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
-done
+echo "Wait for DSM DNS SYNC" >> ${logfile} 2>&1
+waitForDnsSync ${updateResponse}
 echo "Create EBT for T0" >> ${logfile} 2>&1
 ../dsm/ds10-rest-ebtCreate.sh ${dsmAdmin} ${dsmT0Password} ${dsmFqdn} ${dsmConsolePort}
 echo "Modify Linux Server Policy in T0"
