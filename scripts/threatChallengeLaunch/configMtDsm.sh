@@ -12,7 +12,7 @@ logfile=${dsStackName}.log
 
 waitForDnsSync() {
     updateResponse=${1}
-    if [[ -z ${updateResponse} ]]
+    if [[ -z ${updateResponse} ]] || [[ ${dsmRecordDnsName} == *"error"* ]]
     then
         return
     fi
