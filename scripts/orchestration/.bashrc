@@ -32,3 +32,23 @@ delete-event() {
     cd /home/ec2-user/tmThreatChallenge/cleanup/
     ./cleanThreatDefense.sh
 }
+
+rebuild-team() {
+    cd /home/ec2-user/tmThreatChallenge/scripts/threatChallengeLaunch/
+    teamToRebuild=${1}
+    dsmT0Password=$(cat /home/ec2-user/variables/t0AdminPassword)
+    eventName=$(cat /home/ec2-user/variables/eventName)
+    keyPair=$(cat /home/ec2-user/variables/sshkey)
+    dsmFqdn="dsm.${eventName}.trenddemos.com"
+    dsmT0Admin='t0Admin'
+    dsmConsolePort='443'
+    while read line
+    do
+        creds=(${line})
+        if [[ ${creds[0]} != ${teamToRebuild} ]]
+            continue
+        fi
+        nohup ./launchTmtcTeam.sh ${dsmT0Admin} "${dsmT0Password}" ${dsmFqdn} ${dsmConsolePort} ${creds[0]}-rebuild ${creds[1]} ${keyPair} ${eventName} &
+        break
+    done < sanitizedTeamCreds
+}
