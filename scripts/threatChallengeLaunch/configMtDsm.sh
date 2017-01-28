@@ -17,7 +17,7 @@ echo "Starting DSM Configuration" >> ${logfile} 2>&1
 
 echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>&1
 updateResponse=$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn})
-changeID=$(jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
+changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
 status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
 until [[ ${status} == 'INSYNC' ]]
 do
@@ -43,11 +43,17 @@ do
 done
 
 echo "Set DSM Route53 entry" >> ${logfile} 2>&1
-../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn}
+updateResponse=$(../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn})
 echo "Set cert on public ELB"
 ../orchestration/setDsmCert.sh ${dsStackName} "${certArn}"
-echo "Wait 10 minutes for DNS" >> ${logfile} 2>&1
-sleep 600
+echo "Wait minutes for DNS SYNC" >> ${logfile} 2>&1
+changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
+status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
+until [[ ${status} == 'INSYNC' ]]
+do
+     sleep 20
+     status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
+done
 echo "Create EBT for T0" >> ${logfile} 2>&1
 ../dsm/ds10-rest-ebtCreate.sh ${dsmAdmin} ${dsmT0Password} ${dsmFqdn} ${dsmConsolePort}
 echo "Modify Linux Server Policy in T0"
