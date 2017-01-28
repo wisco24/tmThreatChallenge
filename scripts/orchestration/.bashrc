@@ -46,6 +46,7 @@ rebuild-team() {
     do
         creds=(${line})
         if [[ ${creds[0]} != ${teamToRebuild} ]]
+        then
             continue
         fi
         nohup ./launchTmtcTeam.sh ${dsmT0Admin} "${dsmT0Password}" ${dsmFqdn} ${dsmConsolePort} ${creds[0]}-rebuild ${creds[1]} ${keyPair} ${eventName} &
