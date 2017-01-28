@@ -43,6 +43,16 @@
     }
   },
   "Mappings" : {
+    "AMIs" : {
+      "us-east-1" : {
+        "ctf" : "ami-2d57433a",
+        "ctrl" : "ami-9be6f38c"
+      },
+      "ap-northeast-1" : {
+        "ctf" : "ami-90117af7",
+        "ctrl"   : "ami-56d4ad31"
+      }
+    },
     "Parameters" : {
       "CfnUrlPrefix" : {
         "Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/"
@@ -171,7 +181,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : { "Ref": "ControllerInstanceProfile" },
-        "ImageId" : "ami-9be6f38c",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "ctrl"
+          ]
+        },
         "InstanceType" : "m4.large",
         "Tags"               : [
           {
@@ -235,7 +253,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : { "Ref": "ControllerInstanceProfile" },
-        "ImageId" : "ami-2d57433a",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "ctf"
+          ]
+        },
         "InstanceType" : "m3.large",
         "Tags"               : [
           {

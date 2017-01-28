@@ -66,6 +66,20 @@
       "Type" : "String"
     }
   },
+  "Mappings" : {
+    "AMIs" : {
+      "us-east-1" : {
+        "hackvtm" : "ami-abb4efbc",
+        "jump" : "ami-15ec0b03",
+        "msf" : "ami-11edb406"
+      },
+      "ap-northeast-1" : {
+        "hackvtm" : "ami-1d11557a",
+        "jump"   : "ami-f83b7e9f",
+        "msf" : "ami-1a11557d"
+      }
+    }
+  },
   "Resources" :{
     "DsAtkJmpSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
@@ -170,7 +184,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : "RunCommand",
-        "ImageId" : "ami-15ec0b03",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "jump"
+          ]
+        },
         "InstanceType" : "t2.medium",
         "Tags"               : [
           {
@@ -253,7 +275,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : "RunCommand",
-        "ImageId" : "ami-abb4efbc",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "hackvtm"
+          ]
+        },
         "InstanceType" : "t2.small",
         "Tags"               : [
           {
@@ -291,7 +321,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : "RunCommand",
-        "ImageId" : "ami-11edb406",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "msf"
+          ]
+        },
         "InstanceType" : "t2.medium",
         "Tags"               : [
           {

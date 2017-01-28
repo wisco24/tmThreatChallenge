@@ -49,12 +49,34 @@
       "Type" : "AWS::EC2::SecurityGroup::Id"
     }
   },
+  "Mappings" : {
+    "AMIs" : {
+      "us-east-1" : {
+        "cleanW7" : "ami-48d9345e",
+        "compW7" : "ami-a0706bb7",
+        "osceServer" : "ami-45e3ec52"
+      },
+      "ap-northeast-1" : {
+        "cleanW7" : "ami-2e450049",
+        "compW7"   : "ami-0945006e",
+        "osceServer" : "ami-6bee800c"
+      }
+    }
+  },
   "Resources": {
     "OsceServer" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : "osce-server-instance-role",
-        "ImageId" : "ami-45e3ec52",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "osceServer"
+          ]
+        },
         "InstanceType" : "c4.large",
         "Tags" : [
           {
@@ -108,7 +130,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : "RunCommand",
-        "ImageId" : "ami-48d9345e",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "cleanW7"
+          ]
+        },
         "InstanceType" : "c4.large",
         "Tags" : [
           {
@@ -144,7 +174,15 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "IamInstanceProfile" : "RunCommand",
-        "ImageId" : "ami-a0706bb7",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AMIs",
+            {
+              "Ref" : "AWS::Region"
+            },
+            "compW7"
+          ]
+        },
         "InstanceType" : "t2.medium",
         "Tags" : [
           {
