@@ -15,6 +15,7 @@ sudo yum -y install libunwind libicu
 cd /home/ec2-user/
 git clone https://github.com/424D57/tmThreatChallenge.git
 chown -R ec2-user:ec2-user tmThreatChallenge
+cp /home/ec2-user/tmThreatChallenge/scripts/orchestration/.bashrc /home/ec2-user/
 mkdir .aws
 touch .aws/config
 chown -R ec2-user:ec2-user .aws
