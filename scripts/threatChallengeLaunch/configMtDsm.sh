@@ -12,6 +12,10 @@ logfile=${dsStackName}.log
 
 waitForDnsSync() {
     updateResponse=${1}
+    if [[ -z ${updateResponse} ]]
+    then
+        return
+    fi
     changeID=$(echo ${updateResponse} | jq -r '.ChangeInfo.Id' | rev | cut -d"/" -f1 | rev)
     status=$(aws route53 get-change --id ${changeID} | jq -r '.ChangeInfo.Status')
         until [[ ${status} == 'INSYNC' ]]
