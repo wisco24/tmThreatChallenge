@@ -24,8 +24,7 @@ dsmFqdn="dsm.${eventName}.trenddemos.com"
 
 logfile=launchMulti.log
 
-echo "Set Controller DNS Name" >> ${logfile} 2>&1
-../orchestration/setCtrlRoute53.sh "ctrl.${eventName}.trenddemos.com"
+
 
 echo "Launch MT DSM" >> ${logfile} 2>&1
 ./launchMtDSM.sh "${dsmT0Password}" ${activationCode} ${keyPair} ${vpc} ${dsmSubnet} ${dbSubnet1} ${dbSubnet2} ${dsStackName}

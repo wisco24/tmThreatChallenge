@@ -28,5 +28,7 @@ echo $createKeyResponse | jq -r '.KeyMaterial' > /home/ec2-user/teamKey.private
 echo $keyname > /home/ec2-user/variables/sshkey
 yum -y install nginx
 service nginx start
+eventName=$(cat /home/ec2-user/variables/eventName)
+/home/ec2-user/tmThreatChallenge/scripts//orchestration/setCtrlRoute53.sh "ctrl.${eventName}.trenddemos.com"
 ##todo: setup bashrc
 
