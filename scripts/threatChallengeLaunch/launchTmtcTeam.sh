@@ -9,10 +9,11 @@ dsmFqdn=${3}
 dsmConsolePort=${4}
 teamname=${5}
 teamPassword=${6}
-iamusername=${teamname}-dsmservice
+keyPair=${7}
+eventName=${8}
+iamusername=${teamname}-${eventName}-dsmservice
 logfile=${teamname}.log
-keyPair=$(cat /home/ec2-user/variables/sshkey)
-eventName=$(cat /home/ec2-user/variables/eventName)
+
 
 echo "t0user: ${t0User}" >> ${logfile}
 echo "t0Pass: ${t0Pass}" >> ${logfile}
@@ -53,6 +54,7 @@ ParameterKey=DeepSecurityAdminPass,ParameterValue=${teamPassword} \
 ParameterKey=TeamPassword,ParameterValue=${teamPassword} \
 ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
 ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
+ParameterKey=EventName,ParameterValue=${eventName} \
 --tags \
 Key=TeamName,Value=${teamname} \
 Key=CtfRole,Value=SkoTeamStack
