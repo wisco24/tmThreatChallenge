@@ -24,7 +24,7 @@ atk-team() {
 }
 
 launch-event() {
-    cd /home/ec2-user/tmThreatChallenge/scripts/threatChallenge/
+    cd /home/ec2-user/tmThreatChallenge/scripts/threatChallengeLaunch/
     ./launchMultiTenantTeamsFromCreds.sh
 }
 
