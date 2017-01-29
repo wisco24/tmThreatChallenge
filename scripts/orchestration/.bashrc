@@ -11,10 +11,6 @@ eventName=$(cat /home/ec2-user/variables/eventName)
 
 alias reloadshell="exec $SHELL -l"
 
-ssh-ctf() {
-	ssh -v -i ${ctfPrivateKey} ubuntu@ec2-52-44-201-141.compute-1.amazonaws.com
-}
-
 jump-team() {
 	ssh -v -i ${teamPrivateKey} ubuntu@${1}.${eventName}.jump.trenddemos.com
 }
