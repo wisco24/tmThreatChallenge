@@ -31,6 +31,6 @@ service nginx start
 eventName=$(cat /home/ec2-user/variables/eventName)
 baseDomain=$(cat /home/ec2-user/variables/baseDomain)
 baseDomainHostedZoneId=$(cat /home/ec2-user/variables/eventHostedZoneId)
-/home/ec2-user/tmThreatChallenge/scripts//orchestration/setCtrlRoute53.sh "ctrl.${eventName}.${baseDomain}.com" ${baseDomainHostedZoneId}
+/home/ec2-user/tmThreatChallenge/scripts/orchestration/setCtrlRoute53.sh "ctrl.${eventName}.${baseDomain}." ${baseDomainHostedZoneId}
 ##todo: setup bashrc
 
