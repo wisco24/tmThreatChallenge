@@ -16,6 +16,7 @@ dbSubnet1=$(cat /home/ec2-user/variables/dbSubnet1)
 dbSubnet2=$(cat /home/ec2-user/variables/dbSubnet2)
 baseDomain=$(cat /home/ec2-user/variables/baseDomain)
 baseDomainHostedZoneId=$(cat /home/ec2-user/variables/baseDomainHostedZoneId)
+bucket=$(cat /home/ec2-user/variables/bucket)
 
 dsStackName="tmtcDsStack-${eventName}"
 
@@ -35,7 +36,7 @@ echo "Running configMtDsm.sh" >> ${logfile} 2>&1
 echo "Sleep 60 for manager multi tenant settings"
 sleep 60
 echo "Getting creds from S3 and storing new file locally" >> ${logfile} 2>&1
-filename=$(./getTeamsCsv.sh)
+filename=$(./getTeamsCsv.sh ${bucket})
 echo "Looping creds to create teams" >> ${logfile} 2>&1
 while read line
 do
