@@ -305,6 +305,10 @@
               "",
               [
                 "#!/bin/bash -xe\n",
+                "mkdir /home/ec2-user/variables\n",
+                { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "DsmT0Password" } } ] },
+                { "Fn::Sub" : [ "echo ${eventName} > /home/ec2-user/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
+                { "Fn::Sub" : [ "echo ${baseDomain} > /home/ec2-user/variables/baseDomain\n", { "baseDomain": { "Ref": "baseDomain" } } ] },
                 "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh -o /home/ubuntu/setupCtfInstance.sh\n",
                 "cd /home/ubuntu/; chmod +x ./setupCtfInstance.sh; ./setupCtfInstance.sh\n"
               ]
