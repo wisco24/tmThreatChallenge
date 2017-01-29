@@ -15,7 +15,7 @@ dsmSubnet=$(cat /home/ec2-user/variables/dsmSubnet)
 dbSubnet1=$(cat /home/ec2-user/variables/dbSubnet1)
 dbSubnet2=$(cat /home/ec2-user/variables/dbSubnet2)
 baseDomain=$(cat /home/ec2-user/variables/baseDomain)
-baseDomainHostedZoneId=$(cat /home/ec2-user/variables/eventHostedZoneId)
+baseDomainHostedZoneId=$(cat /home/ec2-user/variables/baseDomainHostedZoneId)
 
 dsStackName="tmtcDsStack-${eventName}"
 

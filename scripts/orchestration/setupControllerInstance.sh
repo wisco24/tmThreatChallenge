@@ -30,7 +30,7 @@ yum -y install nginx
 service nginx start
 eventName=$(cat /home/ec2-user/variables/eventName)
 baseDomain=$(cat /home/ec2-user/variables/baseDomain)
-baseDomainHostedZoneId=$(cat /home/ec2-user/variables/eventHostedZoneId)
+baseDomainHostedZoneId=$(cat /home/ec2-user/variables/baseDomainHostedZoneId)
 /home/ec2-user/tmThreatChallenge/scripts/orchestration/setCtrlRoute53.sh "ctrl.${eventName}.${baseDomain}." ${baseDomainHostedZoneId}
 
 
