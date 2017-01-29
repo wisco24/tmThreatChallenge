@@ -328,7 +328,9 @@
             [
               "ctf.",
               { "Ref": "EventName" },
-              ".trenddemos.com."
+              ".",
+              { "Ref": "baseDomain" },
+              "."
             ]
           ]
         },
