@@ -1,10 +1,10 @@
 #!/bin/bash
 dnsname=${1}
 ctrlDnsName=${2}
-
+baseDomainHostedZoneId=${3}
 
 aws route53 change-resource-record-sets --cli-input-json '{
-  "HostedZoneId": "Z54BUX0B2EC7C",
+  "HostedZoneId": "'${baseDomainHostedZoneId}'",
   "ChangeBatch" :{
     "Comment": "Delete CNAME for DSM to ctrl",
     "Changes": [
@@ -14,7 +14,7 @@ aws route53 change-resource-record-sets --cli-input-json '{
           "Name": "'${dnsname}'.",
           "Type": "CNAME",
           "AliasTarget": {
-            "HostedZoneId": "Z54BUX0B2EC7C",
+            "HostedZoneId": "'${baseDomainHostedZoneId}'",
             "DNSName": "'${ctrlDnsName}'.",
             "EvaluateTargetHealth": false
           } 

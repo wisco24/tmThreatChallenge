@@ -29,6 +29,8 @@ echo $keyname > /home/ec2-user/variables/sshkey
 yum -y install nginx
 service nginx start
 eventName=$(cat /home/ec2-user/variables/eventName)
-/home/ec2-user/tmThreatChallenge/scripts//orchestration/setCtrlRoute53.sh "ctrl.${eventName}.trenddemos.com"
+baseDomain=$(cat /home/ec2-user/variables/baseDomain)
+baseDomainHostedZoneId=$(cat /home/ec2-user/variables/eventHostedZoneId)
+/home/ec2-user/tmThreatChallenge/scripts//orchestration/setCtrlRoute53.sh "ctrl.${eventName}.${baseDomain}.com" ${baseDomainHostedZoneId}
 ##todo: setup bashrc
 

@@ -11,6 +11,8 @@ teamname=${5}
 teamPassword=${6}
 keyPair=${7}
 eventName=${8}
+baseDomain=${9}
+baseDomainHostedZoneId=${10}
 iamusername=${teamname}-${eventName}-dsmservice
 logfile=${teamname}.log
 
@@ -56,6 +58,8 @@ ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
 ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
 ParameterKey=EventName,ParameterValue=${eventName} \
 ParameterKey=IncludeOsceChallenge,ParameterValue=true \
+ParameterKey=baseDomain,ParameterValue=${baseDomain} \
+ParameterKey=baseDomainHostedZoneId,ParameterValue=${baseDomainHostedZoneId}
 --tags \
 Key=TeamName,Value=${teamname} \
 Key=CtfRole,Value=SkoTeamStack

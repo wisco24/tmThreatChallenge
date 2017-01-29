@@ -16,6 +16,12 @@
       "MaxLength"   : "255",
       "AllowedPattern" : "[-_a-zA-Z0-9]*"
     },
+    "baseDomain" : {
+      "Type" : "String"
+    },
+    "baseDomainHostedZoneId" : {
+      "Type" : "String"
+    },
     "PublicSubnetID"     : {
       "Description" : "Public Subnet for ATK instance",
       "Type"        : "AWS::EC2::Subnet::Id",
@@ -254,7 +260,7 @@
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "Comment" : "trenddemos.com entries for hybridcloudworkshop day1",
-        "HostedZoneId" : "Z54BUX0B2EC7C",
+        "HostedZoneId" : { "Ref": "baseDomainHostedZoneId" },
         "Name" : {
           "Fn::Join" : [
             "",
@@ -262,7 +268,9 @@
               { "Ref" : "TeamName" },
               ".",
               { "Ref": "EventName" },
-              ".jump.trenddemos.com."
+              ".jump.",
+              { "Ref": "baseDomain" },
+              "."
             ]
           ]
         },

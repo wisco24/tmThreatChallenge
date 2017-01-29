@@ -14,13 +14,15 @@ vpc=$(cat /home/ec2-user/variables/vpcid)
 dsmSubnet=$(cat /home/ec2-user/variables/dsmSubnet)
 dbSubnet1=$(cat /home/ec2-user/variables/dbSubnet1)
 dbSubnet2=$(cat /home/ec2-user/variables/dbSubnet2)
+baseDomain=$(cat /home/ec2-user/variables/baseDomain)
+baseDomainHostedZoneId=$(cat /home/ec2-user/variables/eventHostedZoneId)
 
 dsStackName="tmtcDsStack-${eventName}"
 
 ctfFqdn="ctf.${eventName}.trenddemos.com"
 ctrlFqdn="ctrl.${eventName}.trenddemos.com"
-dsmFqdn="dsm.${eventName}.trenddemos.com"
-#dsmFqdn=dsm.trenddemos.com
+dsmFqdn="dsm.${eventName}.${baseDomain}.com"
+
 
 logfile=launchMulti.log
 
@@ -29,7 +31,7 @@ logfile=launchMulti.log
 echo "Launch MT DSM" >> ${logfile} 2>&1
 ./launchMtDSM.sh "${dsmT0Password}" ${activationCode} ${keyPair} ${vpc} ${dsmSubnet} ${dbSubnet1} ${dbSubnet2} ${dsStackName}
 echo "Running configMtDsm.sh" >> ${logfile} 2>&1
-./configMtDsm.sh "${dsmT0Password}" ${mtActivationCode} ${dsmFqdn} ${dsStackName} ${ctrlFqdn}
+./configMtDsm.sh "${dsmT0Password}" ${mtActivationCode} ${dsmFqdn} ${dsStackName} ${ctrlFqdn} ${baseDomain} ${baseDomainHostedZoneId}
 echo "Sleep 60 for manager multi tenant settings"
 sleep 60
 echo "Getting creds from S3 and storing new file locally" >> ${logfile} 2>&1
@@ -40,7 +42,7 @@ do
     creds=(${line})
     teamlog=${creds[0]}.log
     echo "Launching environment for ${creds[0]}" >> ${logfile} 2>&1
-    nohup ./launchTmtcTeam.sh ${dsmT0Admin} "${dsmT0Password}" ${dsmFqdn} ${dsmConsolePort} ${creds[0]} ${creds[1]} ${keyPair} ${eventName} &
+    nohup ./launchTmtcTeam.sh ${dsmT0Admin} "${dsmT0Password}" ${dsmFqdn} ${dsmConsolePort} ${creds[0]} ${creds[1]} ${keyPair} ${eventName} ${baseDomain} ${baseDomainHostedZoneId} &
     sleep 150
 done < "${filename}"
 echo "Removing creds file" >> ${logfile} 2>&1

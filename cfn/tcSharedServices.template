@@ -12,6 +12,9 @@
     "baseDomain" : {
       "Type" : "String"
     },
+    "baseDomainHostedZoneId" : {
+      "Type" : "String"
+    },
     "EventName" : {
       "Description" : "Name of the challenge event (ex nyc2017). Will be used in domain name. Lower case only max 10 char",
       "Type" : "String",
@@ -238,6 +241,8 @@
                 { "Fn::Sub" : [ "echo ${multiTenantAC} > /home/ec2-user/variables/multiTenantAC\n", { "multiTenantAC": { "Ref": "MultiTenantAC" } } ] },
                 { "Fn::Sub" : [ "echo ${eventName} > /home/ec2-user/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
                 { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ec2-user/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "DsmT0Password" } } ] },
+                { "Fn::Sub" : [ "echo ${baseDomain} > /home/ec2-user/variables/baseDomain\n", { "baseDomain": { "Ref": "baseDomain" } } ] },
+                { "Fn::Sub" : [ "echo ${baseDomainHostedZoneId} > /home/ec2-user/variables/eventHostedZoneId\n", { "baseDomainHostedZoneId": { "Ref": "baseDomainHostedZoneId" } } ] },
                 "cd /home/ec2-user/\n",
                 "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupControllerInstance.sh -o /home/ec2-user/setupControllerInstance.sh\n",
                 "chmod +x ./setupControllerInstance.sh\n",
@@ -306,6 +311,26 @@
             ]
           }
         }
+      }
+    },
+    "CtfRoute53Entry" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "Comment" : "trenddemos.com entry ctf",
+        "HostedZoneId" : "Z54BUX0B2EC7C",
+        "Name" : {
+          "Fn::Join" : [
+            "",
+            [
+              "ctf.",
+              { "Ref": "EventName" },
+              ".trenddemos.com."
+            ]
+          ]
+        },
+        "Type" : "A",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "CtfInstance", "PublicIp" ] } ]
       }
     }
   }

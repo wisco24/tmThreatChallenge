@@ -42,6 +42,12 @@
         "ST"
       ]
     },
+    "baseDomain" : {
+      "Type" : "String"
+    },
+    "baseDomainHostedZoneId" : {
+      "Type" : "String"
+    },
     "DSTenantId" : {
       "Description" : "Team Deep Security Manager Tenant ID",
       "Type" : "String",
@@ -174,7 +180,9 @@
           },
           "TeamPassword" : { "Ref": "TeamPassword" },
           "MtDsmFqdn" : { "Ref": "MtDsmFqdn" },
-          "EventName" : { "Ref": "EventName" }
+          "EventName" : { "Ref": "EventName" },
+          "baseDomain" : { "Ref": "baseDomain" },
+          "baseDomainHostedZoneId" : { "Ref": "baseDomainHostedZoneId" }
         }
       }
     },
@@ -214,7 +222,9 @@
           "DeepSecurityHeartbeat" : { "Fn::If" : [ "SingleTenant", { "Fn::GetAtt" : [ "DeepSecurity", "Outputs.DeepSecurityHeartbeat" ] }, { "Ref": "AWS::NoValue" } ] },
           "TeamPassword" : { "Ref": "TeamPassword" },
           "MtDsmFqdn" : { "Ref": "MtDsmFqdn" },
-          "EventName" : { "Ref": "EventName" }
+          "EventName" : { "Ref": "EventName" },
+          "baseDomain" : { "Ref": "baseDomain" },
+          "baseDomainHostedZoneId" : { "Ref": "baseDomainHostedZoneId" }
         }
       }
     },

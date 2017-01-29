@@ -7,6 +7,8 @@ mtActivationCode=${2}
 dsmFqdn=${3}
 dsStackName=${4}
 ctrlFqdn=${5}
+baseDomain=${6}
+baseDomainHostedZoneId=${7}
 
 logfile=${dsStackName}.log
 
@@ -28,18 +30,18 @@ waitForDnsSync() {
 echo "Starting DSM Configuration" >> ${logfile} 2>&1
 
 echo "Delete DSM Route53 record possibly leftover from previous build" >> ${logfile} 2>&1
-updateResponse=$(../orchestration/delDsmRoute53.sh ${dsmFqdn})
+updateResponse=$(../orchestration/delDsmRoute53.sh ${dsmFqdn} ${baseDomainHostedZoneId})
 waitForDnsSync "${updateResponse}"
 
 echo "Set DSM Route53 record to controller while we get a cert" >> ${logfile} 2>&1
-updateResponse=$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn})
+updateResponse=$(../orchestration/setTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn} ${baseDomainHostedZoneId})
 waitForDnsSync "${updateResponse}"
 
 echo "Get new cert for DSM and upload to IAM" >> ${logfile} 2>&1
 ../orchestration/getCertForElb.sh ${dsmFqdn}
 certArn=$(cat /home/ec2-user/variables/certArn)
 echo "Delete DSM Route53 record to controller now that we have a cert" >> ${logfile} 2>&1
-../orchestration/delTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn}
+../orchestration/delTmpDsmRoute53.sh ${dsmFqdn} ${ctrlFqdn} ${baseDomainHostedZoneId}
 
 
 echo "Waiting for Stack build to complete" >> ${logfile}  2>&1
@@ -54,7 +56,7 @@ done
 
 
 echo "Set DSM Route53 entry" >> ${logfile} 2>&1
-updateResponse=$(../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn})
+updateResponse=$(../orchestration/setDsmRoute53.sh ${dsStackName} ${dsmFqdn} ${baseDomainHostedZoneId})
 echo "Set cert on public ELB"
 ../orchestration/setDsmCert.sh ${dsStackName} "${certArn}"
 echo "Wait for DSM DNS SYNC" >> ${logfile} 2>&1
