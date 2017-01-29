@@ -19,9 +19,9 @@ baseDomainHostedZoneId=$(cat /home/ec2-user/variables/eventHostedZoneId)
 
 dsStackName="tmtcDsStack-${eventName}"
 
-ctfFqdn="ctf.${eventName}.trenddemos.com"
-ctrlFqdn="ctrl.${eventName}.trenddemos.com"
-dsmFqdn="dsm.${eventName}.${baseDomain}.com"
+ctfFqdn="ctf.${eventName}.${baseDomain}"
+ctrlFqdn="ctrl.${eventName}.${baseDomain}"
+dsmFqdn="dsm.${eventName}.${baseDomain}"
 
 
 logfile=launchMulti.log
