@@ -321,7 +321,7 @@
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "Comment" : "trenddemos.com entry ctf",
-        "HostedZoneId" : "Z54BUX0B2EC7C",
+        "HostedZoneId" : { "Ref": "baseDomainHostedZoneId" },
         "Name" : {
           "Fn::Join" : [
             "",
