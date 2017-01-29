@@ -53,7 +53,7 @@
     "AMIs" : {
       "us-east-1" : {
         "cleanW7" : "ami-48d9345e",
-        "compW7" : "ami-a0706bb7",
+        "compW7" : "ami-302bd626",
         "osceServer" : "ami-45e3ec52"
       },
       "ap-northeast-1" : {
