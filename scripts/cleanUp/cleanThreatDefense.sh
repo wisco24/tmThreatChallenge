@@ -1,5 +1,8 @@
 #!/bin/bash
+eventName=$(cat /home/ec2-user/variables/eventName)
+baseDomain=$(cat /home/ec2-user/variables/baseDomain)
 
+dsmFqdn=dsm.${eventName}.${baseDomain}
 allstacks=($(aws cloudformation describe-stacks --query 'Stacks[].StackName' --output text))
 
 deletedstacks=0
@@ -9,7 +12,7 @@ do
     role=($(aws cloudformation describe-stacks --stack-name ${stack} --query 'Stacks[].[Tags[?Key==`CtfRole`].Value[]]' --output text))
     if [[ "${role}" = "SkoTeamStack" ]]
         then
-        if [[ "${stack}" == *"-TMTC" ]]
+        if [[ "${stack}" == *"${eventName}-TMTC" ]]
             then
             aws cloudformation delete-stack --stack-name ${stack}
             echo -e "Deleting Stack ${stack}\n"
@@ -23,7 +26,7 @@ allusers=($(aws iam list-users --query Users[].UserName --output text))
 
 for user in ${allusers[@]}
 do
-    if [[ ${user} == *"-dsmservice" ]]
+    if [[ ${user} == *"${eventName}-dsmservice" ]]
     then
         echo "Deleting User ${user}"
         aws iam delete-user-policy --user-name ${user} --policy-name DSMUserRole
@@ -39,5 +42,7 @@ done
 
 echo "Deleting challenge KeyPair"
 aws ec2 delete-key-pair --key-name $(cat /home/ec2-user/variables/sshkey)
+echo "Deleting DSM ELB cert from IAM"
+aws iam delete-server-certificate --server-certificate-name ${dsmFqdn}
 
 echo -e "sko mass test cleanup complete. Deleted ${deletedstacks} stacks and ${deletedusers} users"
