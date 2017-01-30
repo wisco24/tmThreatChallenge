@@ -115,7 +115,7 @@
                 "(New-Object System.Net.WebClient).DownloadFile(\"https://s3.amazonaws.com/aws-cli/AWSCLI64.msi\", \"$env:temp\\AWSCLI64.msi\")\n",
                 "Start-Process $env:temp\\AWSCLI64.msi /qn -Wait\n",
                 "$env:Path += \";C:\\Program Files\\Amazon\\AWSCLI\\\"\n",
-                "Start-Process \"C:\\Program Files\\Amazon\\AWSCLI\\aws.exe\" -ArgumentList \"s3 cp s3://osce-installer/OSCE_AWS.zip $env:temp\" -Wait\n",
+                "(New-Object System.Net.WebClient).DownloadFile(\"https://s3.amazonaws.com/osce-installer/OSCE_AWS.zip\", \"$env:temp\\OSCE_AWS.zip\")\n",
                 "Expand-Archive $env:temp\\OSCE_AWS.zip $env:temp\\\n",
                 "Start-Process $env:temp\\OSCE_AWS\\osce_xg_win_en_gm_b1222\\setup.exe -ArgumentList \"-s -f1$env:temp\\OSCE_AWS\\osce_xg_win_en_gm_b1222\\setup.iss -f2$env:temp\\OSCE_AWS\\osce_xg_win_en_gm_b1222\\install.log\" -Wait\n",
                 "</powershell>"
