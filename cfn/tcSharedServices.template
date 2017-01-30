@@ -13,7 +13,7 @@
       "Type" : "String"
     },
     "baseDomainHostedZoneId" : {
-      "Type" : "String"
+      "Type" : "AWS::Route53::HostedZone::Id"
     },
     "EventName" : {
       "Description" : "Name of the challenge event (ex nyc2017). Will be used in domain name. Lower case only max 10 char",
