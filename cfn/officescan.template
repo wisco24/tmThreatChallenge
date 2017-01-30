@@ -129,7 +129,6 @@
     "Day2W7Clean" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",
@@ -173,7 +172,6 @@
     "Day2W7Compromised" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",

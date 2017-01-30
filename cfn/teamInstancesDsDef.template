@@ -166,7 +166,6 @@
     "DsDefAtkInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",
@@ -259,7 +258,6 @@
     "DsDefVtmInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",

@@ -189,7 +189,6 @@
     "DsAtkJmpInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",
@@ -282,7 +281,6 @@
     "DsAtkVtmInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",
@@ -328,7 +326,6 @@
     "DsAtkMsfInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "RunCommand",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",
