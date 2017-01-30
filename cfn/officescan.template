@@ -67,7 +67,6 @@
     "OsceServer" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "IamInstanceProfile" : "osce-server-instance-role",
         "ImageId" : {
           "Fn::FindInMap" : [
             "AMIs",
