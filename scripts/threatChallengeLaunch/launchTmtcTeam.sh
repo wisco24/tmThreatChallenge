@@ -52,14 +52,14 @@ ParameterKey=TeamName,ParameterValue=${teamname} \
 ParameterKey=Build,ParameterValue=MT \
 ParameterKey=DSTenantId,ParameterValue=${tenantCreds[1]} \
 ParameterKey=DSTenantPassword,ParameterValue=${tenantCreds[0]} \
-ParameterKey=DeepSecurityAdminPass,ParameterValue=${teamPassword} \
-ParameterKey=TeamPassword,ParameterValue=${teamPassword} \
+ParameterKey=DeepSecurityAdminPass,ParameterValue="${teamPassword}" \
+ParameterKey=TeamPassword,ParameterValue="${teamPassword}" \
 ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
 ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
 ParameterKey=EventName,ParameterValue=${eventName} \
 ParameterKey=IncludeOsceChallenge,ParameterValue=true \
 ParameterKey=baseDomain,ParameterValue=${baseDomain} \
-ParameterKey=baseDomainHostedZoneId,ParameterValue=${baseDomainHostedZoneId}
+ParameterKey=baseDomainHostedZoneId,ParameterValue=${baseDomainHostedZoneId} \
 --tags \
 Key=TeamName,Value=${teamname} \
 Key=CtfRole,Value=SkoTeamStack
