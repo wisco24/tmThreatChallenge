@@ -8,15 +8,16 @@ fi
 # User specific aliases and functions
 teamPrivateKey="/home/ec2-user/teamKey.private"
 eventName=$(cat /home/ec2-user/variables/eventName)
+baseDomain=$(cat /home/ec2-user/variables/baseDomain)
 
 alias reloadshell="exec $SHELL -l"
 
 jump-team() {
-	ssh -v -i ${teamPrivateKey} ubuntu@${1}.${eventName}.jump.trenddemos.com
+	ssh -v -i ${teamPrivateKey} ubuntu@${1}.${eventName}.jump.${baseDomain}
 }
 
 atk-team() {
-	ssh -v -i ${teamPrivateKey} ubuntu@${1}.${eventName}.atk.trenddemos.com
+	ssh -v -i ${teamPrivateKey} ubuntu@${1}.${eventName}.atk.${baseDomain}
 }
 
 launch-event() {
@@ -35,7 +36,7 @@ rebuild-team() {
     dsmT0Password=$(cat /home/ec2-user/variables/t0AdminPassword)
     eventName=$(cat /home/ec2-user/variables/eventName)
     keyPair=$(cat /home/ec2-user/variables/sshkey)
-    dsmFqdn="dsm.${eventName}.trenddemos.com"
+    dsmFqdn="dsm.${eventName}.${baseDomain}
     dsmT0Admin='t0Admin'
     dsmConsolePort='443'
     while read line
