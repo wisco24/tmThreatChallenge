@@ -134,7 +134,7 @@
             "Ref" : "DeepSecurityAdminPass"
           },
           "DSIMultiNode"         : "1" ,
-          "DSIPLicenseKey" : "AP-5JV8-BGXQE-LVP7P-DBWKX-3VXY2-DQNZN",
+          "DSIPLicenseKey" : "XX-XXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX",
           "DSIPHeartbeatPort" : "4120",
           "DSIPGUIPort"       : "443",
           "DSIPInstanceType"         : "m4.large",
