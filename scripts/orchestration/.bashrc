@@ -36,7 +36,7 @@ rebuild-team() {
     dsmT0Password=$(cat /home/ec2-user/variables/t0AdminPassword)
     eventName=$(cat /home/ec2-user/variables/eventName)
     keyPair=$(cat /home/ec2-user/variables/sshkey)
-    dsmFqdn="dsm.${eventName}.${baseDomain}
+    dsmFqdn="dsm.${eventName}.${baseDomain}"
     dsmT0Admin='t0Admin'
     dsmConsolePort='443'
     while read line
