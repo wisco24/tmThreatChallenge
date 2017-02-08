@@ -217,7 +217,7 @@
               [
                 "#!/bin/bash -xe\n",
                 "/opt/ds_agent/dsa_control -r\n",
-                { "Fn::Sub" : [ "/var/www/html/password.sh ${user} ${password}\n", { "user" : { "Ref": "TeamName" }, "password" : { "Ref": "TeamPassword" }} ]},
+                { "Fn::Sub" : [ "/var/www/html/password.sh ${user} ${password} ${DSMFQDN}\n", { "user" : { "Ref": "TeamName" }, "password" : { "Ref": "TeamPassword" }, "DSMFQDN" : { "Ref" : "MtDsmFqdn" }} ]},
                 { "Fn::Sub" : [ "echo ${teamname} > /var/www/html/teamname.txt\n", { "teamname" : { "Ref" : "TeamName" } } ] },
                 {
                   "Fn::If" : [
