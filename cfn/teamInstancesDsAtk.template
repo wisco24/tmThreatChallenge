@@ -79,6 +79,11 @@
         "jump" : "ami-15ec0b03",
         "msf" : "ami-11edb406"
       },
+      "us-west-1" : {
+        "hackvtm" : "ami-812876e1",
+        "jump" : "ami-ef29778f",
+        "msf" : "ami-a72a74c7"
+      },
       "ap-northeast-1" : {
         "hackvtm" : "ami-1d11557a",
         "jump"   : "ami-f83b7e9f",
