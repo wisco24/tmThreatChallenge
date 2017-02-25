@@ -81,11 +81,15 @@
   "Mappings" : {
     "AMIs" : {
       "us-east-1" : {
-        "atk" : "ami-ab69a8bd",
+        "atk" : "ami-98d6048e",
         "defvtm" : "ami-58dd304e"
       },
+      "us-west-1" : {
+        "atk" : "ami-78287618",
+        "defvtm" : "ami-e8297788"
+      },
       "ap-northeast-1" : {
-        "atk" : "ami-84adeee3",
+        "atk" : "ami-75fdb612",
         "defvtm"   : "ami-723a7f15"
       }
     }

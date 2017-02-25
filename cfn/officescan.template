@@ -56,6 +56,11 @@
         "compW7" : "ami-141fe302",
         "osceServer" : "ami-45e3ec52"
       },
+      "us-west-1" : {
+        "cleanW7" : "ami-d32977b3",
+        "compW7" : "ami-ec29778c",
+        "osceServer" : "ami-179ac977"
+      },
       "ap-northeast-1" : {
         "cleanW7" : "ami-2e450049",
         "compW7"   : "ami-98a9edff",

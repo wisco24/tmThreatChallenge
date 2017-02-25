@@ -51,6 +51,10 @@
         "ctf" : "ami-2d57433a",
         "ctrl" : "ami-9be6f38c"
       },
+      "us-west-1" : {
+        "ctf" : "ami-e7277687",
+        "ctrl" : "ami-165a0876"
+      },
       "ap-northeast-1" : {
         "ctf" : "ami-90117af7",
         "ctrl"   : "ami-56d4ad31"
