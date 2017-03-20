@@ -19,7 +19,7 @@ aws cloudformation create-stack --disable-rollback \
 --stack-name ${stackname} \
 --output text \
 --capabilities CAPABILITY_IAM \
---template-url "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/RHEL/MasterRH96.template" \
+--template-url "https://s3.amazonaws.com/trend-micro-quick-start/v-tmtc/RHEL/MasterRH96.template" \
 --parameters \
 ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
 ParameterKey=AWSIVPC,ParameterValue=${vpc} \
@@ -42,6 +42,6 @@ ParameterKey=DSIPInstanceType,ParameterValue=m4.xlarge \
 ParameterKey=DSIPLicenseKey,ParameterValue=${activationCode} \
 ParameterKey=DSISubnetID,ParameterValue=${dsmSubnet} \
 ParameterKey=DBPMultiAZ,ParameterValue=true \
-ParameterKey=CfnUrlPrefix,ParameterValue="https://s3.amazonaws.com/trend-micro-quick-start/v-sko/" \
+ParameterKey=CfnUrlPrefix,ParameterValue="https://s3.amazonaws.com/trend-micro-quick-start/v-tmtc/" \
 --tags \
 Key=CtfRole,Value=SharedServices

@@ -76,7 +76,7 @@
   "Mappings" : {
     "Parameters" : {
       "CfnUrlPrefix" : {
-        "Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v-sko/"
+        "Prefix" : "https://s3.amazonaws.com/trend-micro-quick-start/v-tmtc/"
       }
     }
   },
