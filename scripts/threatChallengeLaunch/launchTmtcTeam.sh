@@ -57,7 +57,7 @@ ParameterKey=TeamPassword,ParameterValue="${teamPassword}" \
 ParameterKey=MtDsmFqdn,ParameterValue=${dsmFqdn} \
 ParameterKey=AWSIKeyPairName,ParameterValue=${keyPair} \
 ParameterKey=EventName,ParameterValue=${eventName} \
-ParameterKey=IncludeOsceChallenge,ParameterValue=true \
+ParameterKey=IncludeOsceChallenge,ParameterValue=false \
 ParameterKey=baseDomain,ParameterValue=${baseDomain} \
 ParameterKey=baseDomainHostedZoneId,ParameterValue=${baseDomainHostedZoneId} \
 --tags \
