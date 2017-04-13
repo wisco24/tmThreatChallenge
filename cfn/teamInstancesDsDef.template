@@ -91,6 +91,10 @@
       "ap-northeast-1" : {
         "atk" : "ami-75fdb612",
         "defvtm"   : "ami-723a7f15"
+      },
+      "eu-central-1" : {
+        "atk" : "ami-38da0857",
+        "defvtm"   : "ami-f7d50798"
       }
     }
   },
