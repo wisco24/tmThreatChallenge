@@ -275,7 +275,7 @@
             "ctf"
           ]
         },
-        "InstanceType" : "m3.large",
+        "InstanceType" : "m4.large",
         "Tags"               : [
           {
             "Key" : "Name",
