@@ -48,7 +48,7 @@
   "Mappings" : {
     "AMIs" : {
       "us-east-1" : {
-        "ctf" : "ami-49c9295f",
+        "ctf" : "ami-88dcd7f3",
         "ctrl" : "ami-9be6f38c"
       },
       "us-west-1" : {
@@ -317,7 +317,7 @@
                 { "Fn::Sub" : [ "echo ${t0AdminPassword} > /home/ubuntu/variables/t0AdminPassword\n", { "t0AdminPassword": { "Ref": "DsmT0Password" } } ] },
                 { "Fn::Sub" : [ "echo ${eventName} > /home/ubuntu/variables/eventName\n", { "eventName": { "Ref": "EventName" } } ] },
                 { "Fn::Sub" : [ "echo ${baseDomain} > /home/ubuntu/variables/baseDomain\n", { "baseDomain": { "Ref": "baseDomain" } } ] },
-                "curl https://raw.githubusercontent.com/424D57/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh -o /home/ubuntu/setupCtfInstance.sh\n",
+                "curl https://raw.githubusercontent.com/wisco24/tmThreatChallenge/master/scripts/orchestration/setupCtfInstance.sh -o /home/ubuntu/setupCtfInstance.sh\n",
                 "cd /home/ubuntu/; chmod +x ./setupCtfInstance.sh; ./setupCtfInstance.sh\n"
               ]
             ]
