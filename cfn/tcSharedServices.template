@@ -48,7 +48,7 @@
   "Mappings" : {
     "AMIs" : {
       "us-east-1" : {
-        "ctf" : "ami-88dcd7f3",
+        "ctf" : "ami-a0c7f5da",
         "ctrl" : "ami-9be6f38c"
       },
       "us-west-1" : {
@@ -165,6 +165,12 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
             "CidrIp": "0.0.0.0/0"
           },
           {
