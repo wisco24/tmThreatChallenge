@@ -52,16 +52,20 @@
         "ctrl" : "ami-9be6f38c"
       },
       "us-west-1" : {
-        "ctf" : "ami-3e21725e",
+        "ctf" : "ami-506a6030",
         "ctrl" : "ami-165a0876"
       },
       "ap-northeast-1" : {
-        "ctf" : "ami-71d79f16",
+        "ctf" : "ami-cf6323a9",
         "ctrl"   : "ami-56d4ad31"
       },
       "eu-central-1" : {
-        "ctf" : "ami-78559817",
+        "ctf" : "ami-c780eca8",
         "ctrl"   : "ami-5b06d634"
+      },
+      "ap-southeast-2" : {
+        "ctf" : "ami-4775b325",
+        "ctrl"   : "ami-942dd1f6"
       }
     },
     "Parameters" : {
