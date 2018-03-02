@@ -4,7 +4,7 @@
   "Parameters" : {
     "BaseUrl" : {
       "Type" : "String",
-      "Default" : "https://s3.amazonaws.com/trendctf/cfn/"
+      "Default" : "https://s3.amazonaws.com/trendctf-staging/cfn/"
     },
     "AWSIKeyPairName" : {
       "Type" : "AWS::EC2::KeyPair::KeyName"
