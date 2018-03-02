@@ -98,7 +98,7 @@
       },
       "ap-southeast-2" : {
         "atk" : "ami-54c60036",
-        "defvtm"   : "ami-54c60036"
+        "defvtm"   : "ami-4ac60028"
       }
     }
   },
