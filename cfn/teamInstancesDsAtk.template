@@ -75,7 +75,7 @@
   "Mappings" : {
     "AMIs" : {
       "us-east-1" : {
-        "hackvtm" : "ami-abb4efbc",
+        "hackvtm" : "ami-0b8fdda3cd7d4d4c6",
         "jump" : "ami-15ec0b03",
         "msf" : "ami-11edb406"
       },
